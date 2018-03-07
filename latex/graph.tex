@@ -10,8 +10,9 @@
 \author{Charles Dufour}
 \maketitle
 \begin{center}
+
     \begin{tikzpicture}[font=\sffamily]
-        % Add the states
+    % Add the states
         \node[state,
               text=red,
               draw=none,
@@ -192,24 +193,33 @@
 %			(orange-10) edge[color = red](red-7)		       
             ;
     \end{tikzpicture}
+     \footnote{I didn't put arrows between two states 10 of different color since the change in the color of the traffic light follows an exponential distribution and hence at a precise instant the probability of changing color is 0. }
+        
     \end{center}
    \newpage
     simply a first idea : 
     \begin{itemize}
     \item the state with a number represent how far away the robot is from the traffic light (unit of distance are to be defined as explained later)
+    \item the color of the number represents the color of the traffic light : yellow is for orange-red 
     \item the arrows represents how the robot can go from a state from another :
     \begin{enumerate}
-    \item the robot can stay where he is
-    \item he can either go one unit of distance or more (cf later)
-    \item the traffic light can change while he is going from one distance to another : let's say it begins in $10$ with a red light and goes to $8$ if while he was arriving the traffic light changed he will go to the corresponding state \footnote{there are arrows from the orange light to the red but I didn't put them in hope it would be more readable. One can uncomment in the Latex code the arrows corresponding}
+    \item the robot can stay where he is : it's the grey arrows looping back into each state
+    \item he can either go one unit of distance or more depending on the speed he decides to take when he leaves the state (cf later) : it's the other grey arrows
+    \item the traffic light can change while he is going from one distance to another : let's say it begins in $10$ with a red light and goes to $8$ if while he was arriving the traffic light changed he will go to the corresponding state \footnote{there are arrows from the orange light to the red but I didn't put them in hope it would be more readable. One can uncomment in the Latex code the arrows corresponding}. It's represented by the arrows of different colors
     \end{enumerate}
     \end{itemize}   
 
-I didn't put arrows between two states 10 of different color since the change in the color of the traffic light follows an exponential distribution and hence at a precise instant the probability of changing color is 0.  1
     
     
     
-    Now about the distance and velocity units, I was thinking that we could use a discretization\footnote{thanks Joachim for this idea} of the different velocities we got (I don't know maybe ten or less depends on I don't know what) and then defines a unit of our new distance as how many centimetres the robot did in one second using the lowest speed possible amongst this new set of velocities.
+    Now about the distance and velocity units, I was thinking that we could use a discretization\footnote{thanks Joachim for this idea} of the different velocities we got (let's say $n+2$) : $\{v_0=0,v_1,\ldots,v_n,v_{max}\}$, with $v_{max}$ being the maximum speed the robot can achieve.
+    
+    Let's assume our robot processes 24 images per sec.
+    Then to define a new unit of distance, let's call it $d_{g}$ we can take the distance travelled in $1/24$ sec while going at $v_0$, so that each time we process an image to follow the line, we are actually in a new state, not between two.
+    
+    
+    But now the question is, how do we measure the length of our movement in $1/24$ sec while going at $v_0$. It depends on how the robot perceives its distance to the traffic light, there is surely a way to link both explicitly.
+    
     
     
     
