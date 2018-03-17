@@ -128,7 +128,7 @@ which actions yield the most reward by trying them. \cite{Sutton}
 Some technical terms : 
 \begin{itemize}
 \item \emph{policy} : it is a mapping from the states to the actions
-\item \emph{value function} : what our learning agent is trying to optimize 
+\item \emph{reward} : what our learning agent is trying to maximize
 \item \emph{model} of the environment : the laws governing the environment 
 \end{itemize}
 
@@ -185,9 +185,9 @@ Markov decisions processes are usually represented with graph : the nodes are th
         
         	(Q) edge[loop above](Q)
         	(Q) edge[bend left](N)
-            (Q) edge[] (P);
-            (P) edge[bend right] (Q)
-            N edge[](P)
+            (Q) edge[] (P)
+            (P) edge[bend left] (Q)
+            (N) edge[](P);
               
     \end{tikzpicture}
     \label{figure : graph_example}
@@ -296,7 +296,7 @@ From this we derive the algorithm \ref{algo1}.
     	$\Delta = 0$\\
     	\For{$s\in \mathcal{S}$}{
     	 $v=V(s)$\\
-    	 $V(s)=\sum_{a}\pi(a\mid s)\sum_{s',r}p(s',r\mid a,s)(r+\gamma V(s'))$\\
+    	 $V(s)=\sum_{a}\pi(a\mid s)\sum_{s',r}p(s',r\mid a,s)[r+\gamma V(s')]$\\
     	 $\Delta = \max(\Delta,\mid v-V(s)\mid)$\\
     	 }
        	}
@@ -389,7 +389,7 @@ v_{\pi}(s) &\leq q_{\pi}(s,\pi'(s))
     	$\Delta = 0$\\
     	\For{$s\in \mathcal{S}$}{
     	 $v=V(s)$\\
-    	 $V(s)=\sum_{a}\pi(a\mid s)\sum_{s',r}p(s',r\mid a,s)(r+\gamma V(s'))$\\
+    	 $V(s)=\sum_{a}\pi(a\mid s)\sum_{s',r}p(s',r\mid a,s)[r+\gamma V(s')]$\\
     	 $\Delta = \max(\Delta,\mid v-V(s)\mid)$\\
     	 }
        	}
@@ -424,10 +424,10 @@ Value iteration is another way of approximating an optimal policy : it combines 
     Initialize V arbitrarily 
     \While{$\Delta \geq \epsilon$}{
     	$v=V(s)$\\
-    	$V(s)=\max_{a}\sum_{s',r}p(s',r\mid s,a)(r+\gamma v_{k}(s'))$\\
+    	$V(s)=\max_{a}\sum_{s',r}p(s',r\mid s,a)[r+\gamma v_{k}(s')]$\\
     	$\Delta =\max(\Delta,\mid v-V(s) \mid)$\\    	
     }
-    \Return{$\pi \approx \pi^{*}$ s.t : $\pi(s)=\text{arg}\max_{a}\sum_{s',r}p(s',r\mid s,a)(r+\gamma v_{k}(s'))$}
+    \Return{$\pi \approx \pi^{*}$ s.t : $\pi(s)=\text{arg}\max_{a}\sum_{s',r}p(s',r\mid s,a)[r+\gamma v_{k}(s')]$}
     
 
     
@@ -470,6 +470,15 @@ Then went back to studying chapter 4 in order to implement the policy evaluation
 \item[17.03.2018] finished typing the r\'{e}sum\'{e} so that I could concentrate on the actual code. I'm not sure about including a subsubsection about the efficiency of the DP method but for now I'm just putting the title to remember .
 
 I have a little problem of references for my first graph but I'll see to that later 
+
+\begin{equation}
+v_{\pi}(s)=R(s)+\gamma \sum_{s \in \mathcal{S}} P(s' \mid s,\pi(s))v_{\pi}(s')
+\label{bellman1}
+\end{equation}
+
+Et je pense que cette equation traduit  bien le cas non stochastic, est-ce que j'explique en plus ?
+
+Then I tried to finish the street racing program but too many bugs appeared so I stop for today, and I'll try again tomorrow
 
 \end{description}
 
