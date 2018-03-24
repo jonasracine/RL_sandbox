@@ -136,7 +136,7 @@ Some technical terms :
 
 
 
-The usual way to formulate the reinforcement learning problem from a mathematical point of view is by using what we call Markov's decision processes (MDP's).
+The usual way to formulate the reinforcement learning problem from a mathematical point of view is by using what we call Markov's decision processes (MDPs).
 
 \subsection{MDP : Markov decision processes}
 
@@ -220,6 +220,8 @@ q_{\pi}(s,a)&= \mathbb{E}[G_t\mid S_t=s, A_t=a]
 
 
 And the value of a state s under a policy:
+
+
 \begin{equation}
 \begin{split}
 v_{\pi}(s)&= \mathbb{E}[G_t \mid S_t=s]
@@ -231,7 +233,7 @@ v_{\pi}(s)&= \mathbb{E}[G_t \mid S_t=s]
 
 \subsubsection{Optimal policies and Optimal value function}
 
-For finite MDP's, the value function can define a partial order in the space of policies : 
+For finite MDPs, the value function can define a partial order in the space of policies : 
 $$ 
 \pi\leq \pi' \iff \pi (s)\leq \pi' (s) \quad \forall s \in \mathcal{S}
 $$
@@ -255,16 +257,16 @@ q_{*}(s,a)= \sum_{s',r}p(s',r \mid s,a)[r+\gamma \max_{a'}q_{*}(s',a')]
 These are called the \emph{Bellman optimality equations}.
 
 
-For finite MDP's these equations have a unique solution. We can note that if we know $v_{*}$ or $q_{*}$ a greedy approach to define a policy (best in the short term) becomes a long-term optimal solution : indeed defining a policy being greedy in function of $v_*$ implies that you go to the best state possible, the one with the bigger expected reward.
+For finite MDPs these equations have a unique solution. We can note that if we know $v_{*}$ or $q_{*}$ a greedy approach to define a policy (best in the short term) becomes a long-term optimal solution : indeed defining a policy being greedy in function of $v_*$ implies that you go to the best state possible, the one with the bigger expected reward.
 
 
-\subsection{Solving MDP's with dynamic programming}
+\subsection{Solving MDPs with dynamic programming}
 
 In general we don't have all the information we need to compute the exact value of $v_{*}$ or even if we have them, we don't have the computational 
 power needed. We often use approximation of value-function instead.
 
 
-From now on we assume our MDP's are finite, even if it is possible to extend everything to infinite MDP's if we are careful enough to avoid the problematic ones.
+From now on we assume our MDPs are finite, even if it is possible to extend everything to infinite MDPs if we are careful enough to avoid the problematic ones.
 
 \subsubsection{Policy iteration}
 
@@ -276,7 +278,7 @@ We begin by setting arbitrary $v(s) \quad \forall s \in \mathcal{S}$.
 Then we update using one of the following update rules : 
 
 \begin{itemize}
-\item $v_k(s)=\sum_{a \in A}\pi(a \mid s)\sum_{s',r}p(s',r\mid s,a)(r+\gamma v_k(s'))$ \quad this is called "iterative policy evaluation".
+\item $v_{k+1}(s)=\sum_{a \in A}\pi(a \mid s)\sum_{s',r}p(s',r\mid s,a)(r+\gamma v_k(s'))$ \quad this is called "iterative policy evaluation".
 \item we can use the same update rule as before, but use new information as soon as it is available : this kind of upgrade algorithm are called in places.
 \end{itemize}
 
