@@ -238,6 +238,7 @@ Approximation of value function
 update rule : 
 $$ v_{k+1}(s)=\sum_{a \in \mathcal{A}}\pi(a \mid s)\sum_{s',r}p(s',r\mid s,a)(r+\gamma v_k(s')) $$
 \end{block}
+\pause
 \begin{block}{Policy Improvement}
 $\pi/\pi'$ : old/new policy.
 $$\pi'(s) = argmax_{a \in \mathcal{A}}q_{\pi}(s,a) $$
@@ -249,7 +250,7 @@ $$\pi'(s) = argmax_{a \in \mathcal{A}}q_{\pi}(s,a) $$
 \begin{frame}
 \frametitle{what have we done so far}
 \begin{center}
-\includegraphics[scale=0.4]{illustration.png}
+\includegraphics[scale=0.4]{illustration2.png}
 \end{center}
 \end{frame}
 
@@ -257,7 +258,7 @@ $$\pi'(s) = argmax_{a \in \mathcal{A}}q_{\pi}(s,a) $$
 \frametitle{modelization}
 \begin{block}{States}
 \begin{itemize}
-\item \pause position \{0,1,2,\ldots ,L,Lava  \}
+\item \pause position \{0,1,2,\ldots ,L, Lava  \}
 \item \pause speed    \{low, medium, high   \}
 \end{itemize}
 \end{block}
@@ -352,7 +353,10 @@ $$\pi'(s) = argmax_{a \in \mathcal{A}}q_{\pi}(s,a) $$
 	       
             ;
     \end{tikzpicture}
- \end{center}
+     \end{center}
+
+ red : high speed \\ yellow : medium speed \\green : low speed
+
 \end{frame}
 
 \begin{frame}
