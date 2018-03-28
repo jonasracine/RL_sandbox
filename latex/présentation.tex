@@ -1,4 +1,4 @@
-sta\documentclass[dvipsnames,svgnames]{beamer}
+\documentclass[dvipsnames,svgnames]{beamer}
 \usetheme{Warsaw}
 \usepackage[utf8]{inputenc}
 \usepackage[english]{babel}
@@ -52,17 +52,17 @@ sta\documentclass[dvipsnames,svgnames]{beamer}
 \end{frame}
 
 
+%\begin{frame}
+%\frametitle{MDPs}
+%\begin{madef}
+%A Markov Decision Process (MDP) is a discrete time stochastic control process, used in situations where outcomes are and random and partly under the control of a decision maker. 
+%
+%\end{madef}
+%\end{frame}
+
 \begin{frame}
 \frametitle{MDPs}
-\begin{madef}
-A Markov Decision Process (MDP) is a discrete time stochastic control process, used in situations where outcomes are and random and partly under the control of a decision maker. 
-
-\end{madef}
-\end{frame}
-
-\begin{frame}
-\frametitle{MDPs}
-\begin{block}{Definition (suite)}
+\begin{block}{Definition }
 \begin{itemize}
 \item A set of states $\mathcal{S}=\{s_0,s_1,s_2,\ldots\}$
 \item A set of actions $\mathcal{A}=\{a_1,a_2,a_3,\ldots\}$
@@ -77,11 +77,11 @@ The transitions only depends on the current state and the current action.
 \end{block}
 \end{frame}
 
-\begin{frame}
-\frametitle{to be told}
-\sout{Particularly, at each time step, our process is in some state $s$.\\Then our learning agent decides which action to execute from the set $\mathcal{A}$ which is doable from state $s$.\\Then the process moves randomly to a new state $s'$ following $T$ and gives the agent a reward $R(s')$.\\The purpose of our agent is to maximise the cumulative reward it gets in the long run.}
-
-\end{frame}
+%\begin{frame}
+%\frametitle{to be told}
+%Particularly, at each time step, our process is in some state $s$.\\Then our learning agent decides which action to execute from the set $\mathcal{A}$ which is doable from state $s$.\\Then the process moves randomly to a new state $s'$ following $T$ and gives the agent a reward $R(s')$.\\The purpose of our agent is to maximise the cumulative reward it gets in the long run.
+%
+%\end{frame}
 
 
 \begin{frame}
@@ -133,7 +133,7 @@ MDP's can be easily represented by graphs :
 
 \end{figure}
 
-\pause The constraints are $\sum_{j}p_{i,j}=1 \quad \forall i \in \mathcal{S}$
+The constraints are $\sum_{j}p_{i,j}=1 \quad \forall i \in \mathcal{S}$
 
 \end{frame}
 
@@ -216,7 +216,7 @@ q_{*}(s,a)= \sum_{s',r}p(s',r \mid s,a)[r+\gamma \max_{a'}q_{*}(s',a')]
 \end{equation}
 \end{block}
 
-\sout{Intuitively these equations say that the value of a state under the optimal policy must equal the expected return for the best action from that state. For finite MDPs these equations have a unique solution.}
+%Intuitively these equations say that the value of a state under the optimal policy must equal the expected return for the best action from that state. For finite MDPs these equations have a unique solution.
 \end{frame}
 
 \begin{frame}
@@ -250,7 +250,7 @@ $$\pi'(s) = argmax_{a \in \mathcal{A}}q_{\pi}(s,a) $$
 \begin{frame}
 \frametitle{what have we done so far}
 \begin{center}
-\includegraphics[scale=0.4]{illustration2.png}
+\includegraphics[scale=0.4]{img/illustration2.png}
 \end{center}
 \end{frame}
 
@@ -530,16 +530,44 @@ $$\pi'(s) = argmax_{a \in \mathcal{A}}q_{\pi}(s,a) $$
 
 \begin{frame}
 \frametitle{Results}
+\framesubtitle{States value evolution}
+\begin{block}{}
+\centering
+States values at iterations $0,2,4$ and $6$ (where stable policy is attained)
+\end{block}
+\vspace{1cm}
+\centering
+\includegraphics[scale=0.1]{img/value0.jpg}\\
+\includegraphics[scale=0.1]{img/value2.jpg}\\
+\includegraphics[scale=0.1]{img/value4.jpg}\\
+\includegraphics[scale=0.1]{img/value6.jpg}\\
 
+
+
+
+\end{frame}
+\begin{frame}
+\frametitle{Results}
+\centering
+\includegraphics[scale=0.5]{img/scores.jpg}
+%\includegraphics[scale=0.3]{img/scores_rand.jpg}
 \end{frame}
 
 
 \begin{frame}
 \frametitle{What's next ? }
 \begin{block}{already working on}
+\begin{itemize}
+\item Add the traffic light into this setting
+\end{itemize}
 \end{block}
 
 \begin{block}{Other ideas}
+\begin{itemize}
+\item Finding the distance from the robot's camera to the traffic light
+\item implement on the robot... \pause and pray that everything works well on the first try
+\end{itemize}
+
 \end{block}
 \end{frame}
 
