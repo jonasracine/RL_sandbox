@@ -46,7 +46,7 @@
   \begin{itemize}
    \item Framework : the Disopt robot which can follow lines
    \item The problem : the robot should adapt its speed with           respect to traffic lights
-   \item How : using Markov Decision Process (MDP)
+   \item How : using Markov Decision Process (MDP) and Reinforcement Learning (RL)
   \end{itemize}
 \end{block} 
 \end{frame}
@@ -86,7 +86,7 @@ The transitions only depends on the current state and the current action.
 
 \begin{frame}
 \frametitle{MDP example}
-MDP's can be easily represented by graphs :
+MDPs can easily be represented by graphs :
 \begin{figure}[ht]
 \centering
     \begin{tikzpicture}[font=\sffamily]
@@ -548,9 +548,10 @@ States values at iterations $0,2,4$ and $6$ (where stable policy is attained)
 \end{frame}
 \begin{frame}
 \frametitle{Results}
+\framesubtitle{Discounted reward}
 \centering
-\includegraphics[scale=0.5]{img/scores.jpg}
-%\includegraphics[scale=0.3]{img/scores_rand.jpg}
+\includegraphics[scale=0.1]{img/scores.jpg}
+%\includegraphics[scale=0.05]{img/scores_rand.jpg}
 \end{frame}
 
 
@@ -562,7 +563,7 @@ States values at iterations $0,2,4$ and $6$ (where stable policy is attained)
 \end{itemize}
 \end{block}
 
-\begin{block}{Other ideas}
+\begin{block}{In a not so distant future}
 \begin{itemize}
 \item Finding the distance from the robot's camera to the traffic light
 \item implement on the robot... \pause and pray that everything works well on the first try
