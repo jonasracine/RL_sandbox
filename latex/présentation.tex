@@ -64,11 +64,11 @@
 \frametitle{MDPs}
 \begin{block}{Definition }
 \begin{itemize}
-\item A set of states $\mathcal{S}=\{s_0,s_1,s_2,\ldots\}$
-\item A set of actions $\mathcal{A}=\{a_1,a_2,a_3,\ldots\}$
+\item A set of states $\mathcal{S}=\{s_0,s_1,s_2,\ldots,s_{n}\}$
+\item A set of actions $\mathcal{A}=\{a_1,a_2,a_3,\ldots,a_{k}\}$
 \item A transition function $T(a,s,s',r) = \mathbb{P}[s',r\mid a,s]$
 \item A reward function $R: \mathcal{S}\mapsto \mathbb{R}$
-\item A discount factor $\gamma$ 
+\item A discount factor $0 \leq \gamma < 1$ 
 \end{itemize}
 \end{block}
 
@@ -557,6 +557,9 @@ States values at iterations $0,2,4$ and $6$ (where stable policy is attained)
 
 \begin{frame}
 \frametitle{What's next ? }
+
+
+
 \begin{block}{already working on}
 \begin{itemize}
 \item Add the traffic light into this setting
@@ -570,6 +573,17 @@ States values at iterations $0,2,4$ and $6$ (where stable policy is attained)
 \end{itemize}
 
 \end{block}
+
+\begin{block}{Ideas}
+
+\begin{itemize}
+\item explore other algorithm and compare them : Monte-Carlo methods, time difference methods, Q learning, $\ldots$
+\item Neuro-dynamic programming ?
+\end{itemize}
+
+\end{block}
+
+
 \end{frame}
 
 
