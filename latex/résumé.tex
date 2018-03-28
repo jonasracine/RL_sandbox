@@ -123,7 +123,7 @@ Prof. Friedrich Eisenbrand
 \emph{Reinforcement learning}\\
 Reinforcement learning is learning what to do, how to map situations to actions so as to maximize
 a numerical reward signal. The learner is not told which actions to take, but instead must discover
-which actions yield the most reward by trying them. \cite{Sutton}\cite{Xia2015}
+which actions yield the most reward by trying them. \cite{Sutton}
 
 Some technical terms : 
 \begin{itemize}
@@ -142,16 +142,19 @@ The usual way to formulate the reinforcement learning problem from a mathematica
 
 
 
-Markov's decision processes are composed by : 
+Markov's decision processes are a tuple $\mathcal{M}=\{\mathcal{S},\mathcal{A},\mathcal{T},\gamma\}$:\cite{Xia2015}
 
 \begin{itemize}
 \item a set of states : $\mathcal{S}=\{s_0,s_1,\ldots\}$
 \item a set of actions  : $A=\{a_1,a_2,\ldots \}$
 \item a transition function :  $T(s,a,s') \sim  Pr(s'\mid a, s) \quad s,s' \in \mathcal{S}$ which gives the state transition probabilities
 \item a reward function : $\mathcal{R}:\mathcal{S}\mapsto \mathbb{R} $
-\item The Markov property : the transitions only depends on the current state and action
 \end{itemize}
 
+$\mathcal{M}$ is a MDP if it respects the Markovian property which is that the transitions only depends on the current state and action : 
+\begin{equation}
+\mathbb{P}(s_{n+1}\mid a_{n},s_{n},a_{n-1},s_{s-1},\ldots)=\mathbb{P}(s_{n+1}\mid a_{n},s_{n})\\
+\end{equation}
 
 When an agent is learning in a MDP, what it observes is a sequence of states, actions and rewards: suppose the agent is in the state $s_0$ and chooses action $a_1$ and then end up in state $s_1$ with reward $r_1$; then the sequence observed is of the form : $s_0,a_1,s_1,r_1,s_2,\ldots$
 
@@ -415,7 +418,7 @@ v_{\pi}(s) &\leq q_{\pi}(s,\pi'(s))
 \subsubsection{Value Iteration}
 Value iteration is another way of approximating an optimal policy : it combines in each of its sweep improvement and evaluation in algorithm \ref{algo4}.
 
-\begin{algorithm}
+\begin{algorithm}[H]
 	\SetKwInOut{Input}{Input}
     \SetKwInOut{Output}{Output}
     \label{algo4}
@@ -448,9 +451,8 @@ There exists some others dynamic programming algorithm to solve these problems :
 \item General Policy Iteration (GPI): they are mixing the two components of policy iteration (evaluation and improvement) a little bit more than the algorithm we already saw.
 \end{itemize}
 
-
-\subsubsection{Efficiency of the DP method}
-
+\section{Experiments}
+\subsection{Street racer}
 
 \newpage
 
