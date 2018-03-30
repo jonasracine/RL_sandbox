@@ -15,8 +15,9 @@
 
 
 
+
 \author{Charles Dufour}
-\title{Reinforcement learning and robot navigation using MDPs}
+\title{Reinforcement learning and robot navigation }
 %\setbeamercovered{transparent} 
 \setbeamertemplate{navigation symbols}{} 
 %\logo{} 
@@ -52,13 +53,63 @@
 \end{frame}
 
 
-%\begin{frame}
-%\frametitle{MDPs}
-%\begin{madef}
-%A Markov Decision Process (MDP) is a discrete time stochastic control process, used in situations where outcomes are and random and partly under the control of a decision maker. 
-%
-%\end{madef}
-%\end{frame}
+\begin{frame}
+\frametitle{MDP Intuition}
+
+\begin{figure}[ht]
+\centering
+    \begin{tikzpicture}[font=\sffamily]
+    % Add the states
+        \node[state,
+              text=yellow,
+              draw=none,
+              fill=gray!50!black] (0) {0};
+        \node[state,
+              right=2cm of 0,
+              text=yellow,
+              draw=none, 
+              fill=gray!50!black] (1) {1};
+        \node[state,
+              below=2cm of 1,
+              text=yellow,
+              draw=none, 
+              fill=gray!50!black] (2) {2};
+        \node[state,
+        	  below = 2cm of 0,
+        	  text=yellow,
+        	  draw=none,
+        	  fill=gray!50!black] (3) {3};
+     
+
+              
+ \draw[every loop,
+        auto=right,
+        >=latex,
+        draw=gray,
+        fill=gray]
+        
+        	(0) edge[loop left, draw = green] node {$0.5$}(0)
+        	(0) edge[ auto = right,draw = red]  node {$0.5$}(2)
+        	(0) edge[auto = right,draw = red] node{$0.5$}  (3)
+            (0) edge[auto = left,draw=green]  node {$0.5$} (1)
+            (1) edge[bend left,auto =left]  node {$1$} (0)
+            (2) edge[]  node {$0.5$}(1)
+			(2) edge[loop right] node{$0.5$} (2)
+			(3) edge[loop right] node{$1$} (3)	
+			       
+            ;       
+      
+    \end{tikzpicture}
+
+\end{figure}
+Sequence of events : $s_0,a_1,s_1,r_1,a_2,\ldots$
+
+\end{frame}
+
+
+
+
+
 
 \begin{frame}
 \frametitle{MDPs}
@@ -66,7 +117,7 @@
 \begin{itemize}
 \item A set of states $\mathcal{S}=\{s_0,s_1,s_2,\ldots,s_{n}\}$
 \item A set of actions $\mathcal{A}=\{a_1,a_2,a_3,\ldots,a_{k}\}$
-\item A transition function $T(a,s,s',r) = \mathbb{P}[s',r\mid a,s]$
+\item A transition function $T(a,s,s') = \mathbb{P}[s'\mid a,s]$
 \item A reward function $R: \mathcal{S}\mapsto \mathbb{R}$
 \item A discount factor $0 \leq \gamma < 1$ 
 \end{itemize}
@@ -84,65 +135,16 @@ The transitions only depends on the current state and the current action.
 %\end{frame}
 
 
-\begin{frame}
-\frametitle{MDP example}
-MDPs can easily be represented by graphs :
-\begin{figure}[ht]
-\centering
-    \begin{tikzpicture}[font=\sffamily]
-    % Add the states
-        \node[state,
-              text=yellow,
-              draw=none,
-              fill=gray!50!black] (0) {0};
-        \node[state,
-              right=2cm of 0,
-              text=yellow,
-              draw=none, 
-              fill=gray!50!black] (1) {1};
-        \node[state,
-              right=2cm of 1,
-              text=yellow,
-              draw=none, 
-              fill=gray!50!black] (2) {2};
-         \node[state,
-              right=2cm of 2,
-              text=yellow,
-              draw=none, 
-              fill=gray!50!black] (3) {3};         
 
-              
-       \draw[every loop,
-        auto=right,
-        >=latex,
-        draw=gray,
-        fill=gray]
-        
-        	(0) edge[loop above] node {$p_{0,0}$}(0)
-        	(0) edge[bend left, auto = left]  node {$p_{0,2}$}(2)
-            (0) edge[auto = left]  node {$p_{0,1}$} (1)
-            (1) edge[bend left,auto =left]  node {$p_{1,0}$} (0)
-            (2) edge[]  node {$p_{2,1}$}(1)
-			(2) edge[loop above] node{$p_{2,2}$} (2)
-			(1) edge[bend right,  auto = right] node{$p_{1,3}$} (3)
-			(3) edge[loop above] node{$p_{3,3}$} (3)           
-            ;
-            
-              
-    \end{tikzpicture}
-
-\end{figure}
-
-The constraints are $\sum_{j}p_{i,j}=1 \quad \forall i \in \mathcal{S}$
-
-\end{frame}
 
 
 \begin{frame}
 \frametitle{how to pick actions}
 \begin{madef}
 A \emph{policy} $\pi$ is a probabilistic mapping from the set of states to the set of actions : 
-$$ \pi : \mathcal{S} \mapsto \mathcal{A} $$
+$$ \pi : \mathcal{A} x \mathcal{S} \mapsto [0,1] $$
+\\
+s.t. $\underset{a}{\sum } \pi(a\mid s)=1 \quad \forall s \in \mathcal{S}$
 
 \end{madef}
 \end{frame}
@@ -158,24 +160,21 @@ What is the best policy ?
 
 \begin{frame}
 \frametitle{how to asses the goodness of policies}
-\begin{block}{Discounted return}
-$$ G_t= \sum_{k=0}^{\infty}\gamma^k * R_{t+k+1}$$
+\begin{block}{We are interested in maximizing the discounted return}
+$$ G_t= \sum_{k=0}^{\infty}\gamma^k R_{t+k+1} = R_{t+1} + \gamma G_{t+1}$$
 \end{block}
 
 \pause
 \begin{block}{action value while in a state s under $\pi$}
 \begin{equation}
-q_{\pi}(s,a) = \mathbb{E}[G_t\mid S_t =s,A_t=a]
+q_{\pi}(s,a) = \mathbb{E}_{\pi}[G_t\mid S_t =s,A_t=a]
 \end{equation}
 \end{block}
 
 \pause
 \begin{block}{state value under policy $\pi$}
 \begin{equation}
-\begin{split}
-v_{\pi}(s)&=\mathbb{E}[G_t \mid S_t=s] 
-\\& = \sum_{a}\pi(a\mid s)\sum_{r,s'}p(s',r\mid s,a)[r+\gamma v_{\pi}(s')]
-\end{split}
+v_{\pi}(s)=\mathbb{E}_{\pi}[G_t \mid S_t=s]
 \end{equation}
 \end{block}
 
@@ -183,10 +182,27 @@ v_{\pi}(s)&=\mathbb{E}[G_t \mid S_t=s]
 
 \end{frame}
 
+
+
+\begin{frame}
+\frametitle{Recursive definition of function values}
+\begin{block}{state value}
+\begin{equation}
+\begin{split}
+v_{\pi}(s,a) &= \mathbb{E}_{\pi}[G_t\mid S_t =s]
+\\&=\mathbb{E}_{\pi}[R_{t+1}+\gamma G_{t+1}\mid S_t =s]
+\\& =\sum_{a }\pi(a \mid s) \sum_{s'}\mathbb{P}(s'\mid a,s)\left[R(s') + \gamma \mathbb{E}_{\pi}\left[G_{t+1} \mid S_{t+1}=s' \right] \right]
+\\& =\sum_{a }\pi(a \mid s) \sum_{s'}\mathbb{P}(s'\mid a,s)\left[R(s') + \gamma v_{\pi}(s') \right]
+\end{split}
+\end{equation}
+\end{block}
+\end{frame}
+
+
 \begin{frame}
 \frametitle{how to asses the goodness of policies}
 \begin{block}{how to compare two policies}
-$$ \pi \leq \pi ' \iff  \pi (s)\leq \pi ' (s) \quad \forall s \in \mathcal{S}
+$$ \pi \leq \pi ' \iff  v_{\pi}(s) \leq v_{\pi'}(s) \quad \forall s \in \mathcal{S}
 $$
 \end{block}
 
@@ -206,12 +222,12 @@ The optimal policy $\pi_{*}$ has value functions : $v_*$ and $q_*$
 \begin{block}{}
 
 \begin{equation}
-v_{*}(s)=\max_{a} \sum_{s',r}p(s',r\mid s,a)[r+\gamma v_{*}(s')]
+v_{\pi_{*}}(s)=\max_{a} \sum_{s',r}\mathbb{P}(s'\mid s,a)[R(s')+\gamma v_{*}(s')]
 \label{bellman_opt_v}
 \end{equation}
 
 \begin{equation}
-q_{*}(s,a)= \sum_{s',r}p(s',r \mid s,a)[r+\gamma \max_{a'}q_{*}(s',a')]
+q_{\pi_{*}}(s,a)= \sum_{s',r}\mathbb{P}(s' \mid s,a)[R(s')+\gamma \max_{a'}q_{*}(s',a')]
 \label{bellman_opt_q}
 \end{equation}
 \end{block}
@@ -222,7 +238,7 @@ q_{*}(s,a)= \sum_{s',r}p(s',r \mid s,a)[r+\gamma \max_{a'}q_{*}(s',a')]
 \begin{frame}
 \frametitle{Another issue}
 \begin{alertblock}{computational issue}
-If we wanted to solve these equations directly, it would cost a lot of computational power to know exactly the value functions first and then to solve. So how do we do it ? 
+If we wanted to solve these equations directly, it would cost a lot of computational power to know exactly the value functions first and then to solve since they are not linear. So how do we do it ? 
 \end{alertblock}
 
 \pause 
@@ -234,23 +250,41 @@ Approximation of value function
 
 \begin{frame}
 \frametitle{solving MDPs using dynamic programming}
-\begin{block}{policy iteration}
+\begin{block}{iterative policy evaluation}
 update rule : 
-$$ v_{k+1}(s)=\sum_{a \in \mathcal{A}}\pi(a \mid s)\sum_{s',r}p(s',r\mid s,a)(r+\gamma v_k(s')) $$
+$$ v_{k+1}(s)=\sum_{a \in \mathcal{A}}\pi(a \mid s)\sum_{s',r}T(a,s,s')\left[r+\gamma v_k(s')\right] $$
 \end{block}
 \pause
 \begin{block}{Policy Improvement}
 $\pi/\pi'$ : old/new policy.
-$$\pi'(s) = argmax_{a \in \mathcal{A}}q_{\pi}(s,a) $$
+$$\pi'(s) = \underset{a \in \mathcal{A}}{\text{argmax } } q_{\pi}(s,a) $$
 \end{block}
 
 \end{frame}
 
 
 \begin{frame}
-\frametitle{what have we done so far}
+\frametitle{Policy iteration algorithm}
+%\includegraphics[scale=0.6]{img/generalized_policy_iter_sutton.png}
+\centering
+\includegraphics[scale=0.7]{img/policy_iter_sutton.png}
+
+From (Sutton \& Barto, 1998)
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Our problem}
 \begin{center}
-\includegraphics[scale=0.4]{img/illustration2.png}
+\includegraphics[scale=0.4]{img/illustration_traffic_light.png}
+\end{center}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{First a simpler problem}
+\begin{center}
+\includegraphics[scale=0.4]{img/illustration_lava.png}
 \end{center}
 \end{frame}
 
@@ -544,16 +578,26 @@ States values at iterations $0,2,4$ and $6$ (where stable policy is attained)
 \includegraphics[scale=0.1]{img/value6.jpg}\\
 
 
-
-
 \end{frame}
+
+
 \begin{frame}
-\frametitle{Results}
-\framesubtitle{Discounted reward}
+\frametitle{Results for deterministic actions}
+\framesubtitle{One of the optimal trajectories}
 \centering
-\includegraphics[scale=0.1]{img/scores.jpg}
-%\includegraphics[scale=0.05]{img/scores_rand.jpg}
+\includegraphics[scale=0.5]{img/trajectory.jpg}
 \end{frame}
+
+\begin{frame}
+\frametitle{Results when uncertainty introduced into brakes}
+\framesubtitle{Evolution of the trajectories during iteration 0,2, and 4 (optimal)}
+\centering
+\includegraphics[scale=0.35]{img/trajectory0.jpg}
+\includegraphics[scale=0.35]{img/trajectory2.jpg}
+\includegraphics[scale=0.35]{img/trajectory4.jpg}
+\end{frame}
+
+
 
 
 \begin{frame}
@@ -564,28 +608,24 @@ States values at iterations $0,2,4$ and $6$ (where stable policy is attained)
 \begin{block}{already working on}
 \begin{itemize}
 \item Add the traffic light into this setting
+\item Find the distance from the robot's camera to the traffic light
 \end{itemize}
 \end{block}
 
 \begin{block}{In a not so distant future}
 \begin{itemize}
-\item Finding the distance from the robot's camera to the traffic light
-\item implement on the robot... \pause and pray that everything works well on the first try 
-\end{itemize}
-
-\end{block}
-\pause
-\begin{block}{Ideas}
-
-\begin{itemize}
 \item explore other algorithm and compare them : Monte-Carlo methods, time difference methods, Q learning, $\ldots$
 \item Neuro-dynamic programming ?
 \end{itemize}
-
 \end{block}
 
+\pause
+\begin{block}{Ultimately}
+Implement everything on the robot ... \pause and pray that it works !!
+\end{block}
 
 \end{frame}
+
 
 
 
