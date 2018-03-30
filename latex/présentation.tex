@@ -182,6 +182,21 @@ v_{\pi}(s)=\mathbb{E}_{\pi}[G_t \mid S_t=s]
 
 \end{frame}
 
+\begin{frame}
+\frametitle{Recursive definition of function values}
+\begin{block}{action value}
+\begin{equation}
+\begin{split}
+q_{\pi}(s,a) &= \mathbb{E}_{\pi}[G_t\mid S_t =s, A_t=a]
+\\&=\mathbb{E}_{\pi}[R_{t+1}+\gamma G_{t+1}\mid S_t =s, A_t=a]
+\\& =\sum_{s'}\mathbb{P}(s'\mid a,s)\left[r + \gamma \mathbb{E}_{\pi}\left[G_{t+1} \mid S_{t+1}=s' \right]\right]
+\\& = \sum_{s'}\mathbb{P}(s'\mid a,s)\left[r + \gamma v_{\pi}(s') \right]
+\end{split}
+\end{equation}
+\end{block}
+
+with $r=R(s')$
+\end{frame}
 
 
 \begin{frame}
@@ -189,14 +204,19 @@ v_{\pi}(s)=\mathbb{E}_{\pi}[G_t \mid S_t=s]
 \begin{block}{state value}
 \begin{equation}
 \begin{split}
-v_{\pi}(s,a) &= \mathbb{E}_{\pi}[G_t\mid S_t =s]
+v_{\pi}(s) &= \mathbb{E}_{\pi}[G_t\mid S_t =s]
 \\&=\mathbb{E}_{\pi}[R_{t+1}+\gamma G_{t+1}\mid S_t =s]
-\\& =\sum_{a }\pi(a \mid s) \sum_{s'}\mathbb{P}(s'\mid a,s)\left[R(s') + \gamma \mathbb{E}_{\pi}\left[G_{t+1} \mid S_{t+1}=s' \right] \right]
-\\& =\sum_{a }\pi(a \mid s) \sum_{s'}\mathbb{P}(s'\mid a,s)\left[R(s') + \gamma v_{\pi}(s') \right]
+\\& =\sum_{a }\pi(a \mid s) \sum_{s'}\mathbb{P}(s'\mid a,s)\left[r + \gamma \mathbb{E}_{\pi}\left[G_{t+1} \mid S_{t+1}=s' \right]\right]
+\\& =\sum_{a }\pi(a \mid s) \sum_{s'}\mathbb{P}(s'\mid a,s)\left[r + \gamma v_{\pi}(s') \right]
+\\&=\sum_{a }\pi(a \mid s)q_{\pi}(s,a)
 \end{split}
 \end{equation}
 \end{block}
+
+with $r=R(s')$
 \end{frame}
+
+
 
 
 \begin{frame}
@@ -213,26 +233,45 @@ $$ \pi_{*} \quad s.t. \quad \forall \pi : \pi_{*}\geq \pi $$
 \end{block}
 \end{frame}
 
+%\begin{frame}
+%\frametitle{Bellman optimality principle}
+% An optimal policy has the property that whatever the initial state and initial decision are, the remaining decisions must constitute an optimal policy with regard to the state resulting from the first decision. (See Bellman, 1957, Chap. III.3.)
+%\end{frame}
 
 \begin{frame}
 \frametitle{Bellman optimality equations}
 
-The optimal policy $\pi_{*}$ has value functions : $v_*$ and $q_*$
+The optimal policy $\pi_{*}$ has value functions  $v_*$ and $q_*$
 
 \begin{block}{}
 
 \begin{equation}
-v_{\pi_{*}}(s)=\max_{a} \sum_{s',r}\mathbb{P}(s'\mid s,a)[R(s')+\gamma v_{*}(s')]
-\label{bellman_opt_v}
+\begin{split}
+v_{*}(s)&=\underset{a}{\text{max }} q_{\pi_{*}}(s,a)
+\\&=\max_{a} \sum_{s'}\mathbb{P}(s'\mid s,a)[R(s')+\gamma v_{*}(s')]
+\end{split}
 \end{equation}
+\end{block}
 
+\begin{block}{}
 \begin{equation}
-q_{\pi_{*}}(s,a)= \sum_{s',r}\mathbb{P}(s' \mid s,a)[R(s')+\gamma \max_{a'}q_{*}(s',a')]
-\label{bellman_opt_q}
+\begin{split}
+q_{*}(s,a)&=\mathbb{E}\left[ R_{t+1} + \gamma \max_{a'} q_{*}(S_{t+1},a') \mid S_t = s, A_t = a \right]
+\\&= \sum_{s'}\mathbb{P}(s' \mid s,a)[R(s')+\gamma \max_{a'}q_{*}(s',a')]
+\end{split}
 \end{equation}
 \end{block}
 
 %Intuitively these equations say that the value of a state under the optimal policy must equal the expected return for the best action from that state. For finite MDPs these equations have a unique solution.
+\end{frame}
+
+
+\begin{frame}
+\frametitle{finding optimal policy from value functions}
+\begin{block}{}
+
+$$\pi_{*}(s)= \underset{a}{\text{argmax }}q_*(s,a)$$
+\end{block}
 \end{frame}
 
 \begin{frame}
@@ -268,8 +307,8 @@ $$\pi'(s) = \underset{a \in \mathcal{A}}{\text{argmax } } q_{\pi}(s,a) $$
 %\includegraphics[scale=0.6]{img/generalized_policy_iter_sutton.png}
 \centering
 \includegraphics[scale=0.7]{img/policy_iter_sutton.png}
+\footnote{From (Sutton \& Barto, 1998)}
 
-From (Sutton \& Barto, 1998)
 \end{frame}
 
 
@@ -597,6 +636,15 @@ States values at iterations $0,2,4$ and $6$ (where stable policy is attained)
 \includegraphics[scale=0.35]{img/trajectory4.jpg}
 \end{frame}
 
+\begin{frame}
+\frametitle{Conclusion, what have we done ? }
+\begin{block}{}
+\begin{itemize}
+\item We introduced the theoretical framework,the Markov Decision Process
+\item We solved a simple problem where we know the model
+\end{itemize}
+\end{block}
+\end{frame}
 
 
 
@@ -614,14 +662,14 @@ States values at iterations $0,2,4$ and $6$ (where stable policy is attained)
 
 \begin{block}{In a not so distant future}
 \begin{itemize}
-\item explore other algorithm and compare them : Monte-Carlo methods, time difference methods, Q learning, $\ldots$
+\item explore other algorithm and compare them : Monte-Carlo methods, temporal difference learning, Q learning, $\ldots$
 \item Neuro-dynamic programming ?
 \end{itemize}
 \end{block}
 
 \pause
 \begin{block}{Ultimately}
-Implement everything on the robot ... \pause and pray that it works !!
+Implement everything on the robot ... \pause and pray that everything works well
 \end{block}
 
 \end{frame}
