@@ -166,16 +166,16 @@ $$ G_t= \sum_{k=0}^{\infty}\gamma^k R_{t+k+1} = R_{t+1} + \gamma G_{t+1}$$
 
 \pause
 \begin{block}{action value while in a state s under $\pi$}
-\begin{equation}
+\begin{equation*}
 q_{\pi}(s,a) = \mathbb{E}_{\pi}[G_t\mid S_t =s,A_t=a]
-\end{equation}
+\end{equation*}
 \end{block}
 
 \pause
 \begin{block}{state value under policy $\pi$}
-\begin{equation}
+\begin{equation*}
 v_{\pi}(s)=\mathbb{E}_{\pi}[G_t \mid S_t=s]
-\end{equation}
+\end{equation*}
 \end{block}
 
 
@@ -185,14 +185,14 @@ v_{\pi}(s)=\mathbb{E}_{\pi}[G_t \mid S_t=s]
 \begin{frame}
 \frametitle{Recursive definition of function values}
 \begin{block}{action value}
-\begin{equation}
+\begin{equation*}
 \begin{split}
 q_{\pi}(s,a) &= \mathbb{E}_{\pi}[G_t\mid S_t =s, A_t=a]
 \\&=\mathbb{E}_{\pi}[R_{t+1}+\gamma G_{t+1}\mid S_t =s, A_t=a]
 \\& =\sum_{s'}\mathbb{P}(s'\mid a,s)\left[r + \gamma \mathbb{E}_{\pi}\left[G_{t+1} \mid S_{t+1}=s' \right]\right]
 \\& = \sum_{s'}\mathbb{P}(s'\mid a,s)\left[r + \gamma v_{\pi}(s') \right]
 \end{split}
-\end{equation}
+\end{equation*}
 \end{block}
 
 with $r=R(s')$
@@ -202,7 +202,7 @@ with $r=R(s')$
 \begin{frame}
 \frametitle{Recursive definition of function values}
 \begin{block}{state value}
-\begin{equation}
+\begin{equation*}
 \begin{split}
 v_{\pi}(s) &= \mathbb{E}_{\pi}[G_t\mid S_t =s]
 \\&=\mathbb{E}_{\pi}[R_{t+1}+\gamma G_{t+1}\mid S_t =s]
@@ -210,7 +210,7 @@ v_{\pi}(s) &= \mathbb{E}_{\pi}[G_t\mid S_t =s]
 \\& =\sum_{a }\pi(a \mid s) \sum_{s'}\mathbb{P}(s'\mid a,s)\left[r + \gamma v_{\pi}(s') \right]
 \\&=\sum_{a }\pi(a \mid s)q_{\pi}(s,a)
 \end{split}
-\end{equation}
+\end{equation*}
 \end{block}
 
 with $r=R(s')$
@@ -245,21 +245,22 @@ The optimal policy $\pi_{*}$ has value functions  $v_*$ and $q_*$
 
 \begin{block}{}
 
-\begin{equation}
+\begin{equation*}
 \begin{split}
-v_{*}(s)&=\underset{a}{\text{max }} q_{\pi_{*}}(s,a)
+v_{*}(s)&=\underset{a}{\text{max }} q_{*}(s,a)
 \\&=\max_{a} \sum_{s'}\mathbb{P}(s'\mid s,a)[R(s')+\gamma v_{*}(s')]
 \end{split}
-\end{equation}
+\end{equation*}
 \end{block}
 
 \begin{block}{}
-\begin{equation}
+\begin{equation*}
 \begin{split}
-q_{*}(s,a)&=\mathbb{E}\left[ R_{t+1} + \gamma \max_{a'} q_{*}(S_{t+1},a') \mid S_t = s, A_t = a \right]
+q_{*}(s,a)&=\mathbb{E}\left[ R_{t+1} + \gamma v_{*}(S_ {t+1}) \mid S_t = s, A_t = a \right]
+\\&=\mathbb{E}\left[ R_{t+1} + \gamma \max_{a'} q_{*}(S_{t+1},a') \mid S_t = s, A_t = a \right]
 \\&= \sum_{s'}\mathbb{P}(s' \mid s,a)[R(s')+\gamma \max_{a'}q_{*}(s',a')]
 \end{split}
-\end{equation}
+\end{equation*}
 \end{block}
 
 %Intuitively these equations say that the value of a state under the optimal policy must equal the expected return for the best action from that state. For finite MDPs these equations have a unique solution.
