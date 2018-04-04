@@ -175,7 +175,7 @@ $\mathcal{M}$ is a MDP if it respects the Markovian property which is that the t
 When an agent is learning in a MDP, what it observes is a sequence of states, actions and rewards: suppose the agent is in the state $s_0$ and chooses action $a_1$ and then end up in state $s_1$ with reward $r_1$; then the sequence observed is of the form : $s_0,a_1,s_1,r_1,a_2,s_2,r_2\ldots$
 
 
-Markov decisions processes are usually represented with graph : the nodes are the states and the directed edges from a node $Q$ are the actions an agent can choose to make while being in state $Q$, which will bring the agent in the state represented by the node at the endpoint of the edge as we can see in figure \ref{figure : graph_example}.
+Markov decisions processes can easily be  represented as a directed graph : the nodes are the states and the directed edges from a node $Q$ are the actions an agent can choose to make while being in state $Q$, which will bring the agent in the state represented by the node at the endpoint of the edge as we can see in figure \ref{figure : graph_example}.
 
 
 \begin{figure}[H]
@@ -539,9 +539,9 @@ Value iteration is another way of approximating an optimal policy : it combines 
 
 Algorithm \ref{algo4} finishes if the number of states is finite : 
 \begin{proof} 
-We define the Bellman operator : $\mathcal{T}_{\pi}:\mathbb{R}^{\mid \mathcal{S}\mid } \mapsto \mathbb{R}^{\mid \mathcal{S}\mid }$ in the following way :
+We define the Bellman operator : $\mathcal{T}:\mathbb{R}^{\mid \mathcal{S}\mid } \mapsto \mathbb{R}^{\mid \mathcal{S}\mid }$ in the following way :
 \begin{equation*}
-(\mathcal{T}_{\pi}V)(s)=\max_{a \in \mathcal{A}}\sum_{s'}\mathbb{P}(s'\mid a,s)\left[ R(s') + \gamma V(s') \right]
+(\mathcal{T}V)(s)=\max_{a \in \mathcal{A}}\sum_{s'}\mathbb{P}(s'\mid a,s)\left[ R(s') + \gamma V(s') \right]
 \end{equation*}
 
 In particular this operator is a contraction in the infinity norm, and hence our convergence is equivalent to the well known fixed point problem. Indeed if we consider the inequality : 
@@ -552,7 +552,7 @@ In particular this operator is a contraction in the infinity norm, and hence our
 Then having this inequality:
 \begin{equation*}
 \begin{split}
-\mid \mathcal{T}_{\pi}V(s) - \mathcal{T}_{\pi}V'(s) \mid & \leq \mid \max_{a \in \mathcal{A}}\sum_{s'}\mathbb{P}(s'\mid a,s)\left[ R(s') + \gamma V(s') \right] - \max_{a \in \mathcal{A}}\sum_{s'}\mathbb{P}(s'\mid a,s)\left[ R(s') + \gamma V'(s') \right]\mid
+\mid \mathcal{T}V(s) - \mathcal{T}V'(s) \mid & \leq \mid \max_{a \in \mathcal{A}}\sum_{s'}\mathbb{P}(s'\mid a,s)\left[ R(s') + \gamma V(s') \right] - \max_{a \in \mathcal{A}}\sum_{s'}\mathbb{P}(s'\mid a,s)\left[ R(s') + \gamma V'(s') \right]\mid
 \\& \stackrel{(\ref{inter})}{\leq} \max_{a \in \mathcal{A}}\mid \sum_{s'}\mathbb{P}(s'\mid a,s)\left[ R(s') + \gamma V(s') \right] - \sum_{s'}\mathbb{P}(s'\mid a,s)\left[ R(s') + \gamma V'(s') \right]\mid
 \\&\leq \max _{a}\gamma \mid \sum_{s'}\mathbb{P}(s'\mid a,s)\left[ V(s')-V'(s')\right] \mid
 \\& \leq \gamma \max_{s} \mid V(s)-V'(s) \mid
@@ -560,7 +560,7 @@ Then having this inequality:
 \end{split}
 \end{equation*}
 
-Now using the property that a contraction has a unique fixed point and that all sequences $V,\mathcal{T}_{\pi}V,\mathcal{T}_{\pi}^2V,\ldots $ converges towards this fixed point we get the convergence.
+Now using the property that a contraction has a unique fixed point and that all sequences $V,\mathcal{T}V,\mathcal{T}^2V,\ldots $ converges towards this fixed point we get the convergence.
 
 
 \end{proof}
@@ -596,47 +596,6 @@ But the most important drawback to these methods is that they are model-based, m
 
 
 
-
-\newpage
-\fancyhead[L]{\emph{JOURNAL}}
-
-\section{Journal}
-\begin{description}
-\item[28.02.2018] finished reading chapter 2 Sutton's book about the \code{k-bandits problem} : implementation of simple algorithms of the book on jupyter notebook in \code{Rl-sandbox}
-\item[01.03.2018] initiated the Latex journal 
-\item[04.03.2108]read the notebook about \code{numpy} and tried to go on with the lecture of the literature--> have to read again the example about the golf 
-
-finished the chapter 3 
-\item[12.03.2018] read chapter three again and made a summary of it
-
-Then tried to attack the street racer problem 
-
-\item[15.03.2018] tried to understand exactly what the problem of the street racing was about and tried to define a real reward function after coding the matrices for each action
-Then went back to studying chapter 4 in order to implement the policy evaluation/improvement functions 
-
-\item[16.03.2018] finished reading chapter 4 of Sutton's book continued the summary
-\item[17.03.2018] finished typing the r\'{e}sum\'{e} so that I could concentrate on the actual code. I'm not sure about including a subsubsection about the efficiency of the DP method but for now I'm just putting the title to remember .
-
-I have a little problem of references for my first graph but I'll see to that later 
-
-\begin{equation}
-v_{\pi}(s)=R(s)+\gamma \sum_{s \in \mathcal{S}} P(s' \mid s,\pi(s))v_{\pi}(s')
-\label{bellman1}
-\end{equation}
-
-Et je pense que cette equation traduit  bien le cas non stochastic, est-ce que j'explique en plus ?
-
-Then I tried to finish the street racing program but too many bugs appeared so I stop for today, and I'll try again tomorrow
-
-\item[21.03.2018] Finished design the matrices and the model for the racing car, but issues seem to appear , the algorithm doesn't seem to work
-
-\item[22.03.2018] fixed issues in the code : still strange things happening : the score get optimum too quickly....
-
-\item[24.03.2018] fixed almost everything but still the convergence rate is abnormally high \\ Prepared first part of the presentation too 
-
-\item[28.03.2018] worked on the presentation, read a lot of \citep{Xia2015} and then on how to include the traffic lights into this framework
-
-\end{description}
 
 
 
