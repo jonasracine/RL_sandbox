@@ -163,11 +163,11 @@ Markov's decision processes are a tuple  $\mathcal{M}=\{\mathcal{S},\mathcal{A},
 \end{itemize}
 
 
-The discount factor $\gamma $ helps making our learning agent more or less far-sighted : $\gamma$ can be interpreted as the relative importance it will give to future rewards compared to immediate.
+The discount factor $\gamma $ helps making our learning agent more or less far-sighted : $\gamma$ can be interpreted as the relative importance it will give to future rewards compared to immediate ones.
 
 $\mathcal{M}$ is a MDP if it respects the Markovian property which is that the transitions only depends on the current state and action : 
 \begin{equation*}
-\mathbb{P}(s_{n+1}\mid a_{n},s_{n},a_{n-1},s_{n-1},\ldots)=\mathbb{P}(s_{n+1}\mid a_{n},s_{n})\\
+\mathbb{P}(s_{n+1}\mid a_{n+1},s_{n},a_{n},s_{n-1},\ldots)=\mathbb{P}(s_{n+1}\mid a_{n+1},s_{n})\\
 \end{equation*}
 
 
@@ -329,7 +329,7 @@ q_{*}(s,a)&=\mathbb{E}\left[ R_{t+1} + \gamma v_{*}(S_ {t+1}) \mid S_t = s, A_t 
 \label{bellman_opt_q}
 \end{equation}
 
-These are called the \emph{Bellman optimality equations}. What (\ref{bellman_opt_v}) tells intuitively is that the value of a state under $\pi^*$ must equal the expected return for the best action we can take from at that state.
+These are called the \emph{Bellman optimality equations}. What (\ref{bellman_opt_v}) tells intuitively is that the value of a state under $\pi^*$ must equal the expected return for the best action we can take from that state.
 
 
 For finite MDPs these equations have a unique solution. We can note that if we know $v_{*}$ or $q_{*}$ a greedy approach to define a policy (best in the short term) becomes a long-term optimal solution : indeed defining a policy being greedy in function of $v_*$ implies that you go to the best state possible, the one with the biggest expected reward.
@@ -392,7 +392,7 @@ Then we try to find a better policy : we try to determine whether we should chan
 
 Mathematically speaking we will compare the value of taking action $a$ while being in the state s : $q_{\pi}(s,a)$ to the value of $s$: $v_{\pi}(s)$. Then we would greedily improve our policy this way.
 
-The greedy update rule we use to improve our policy is from which we derive algorithm \ref{algo2} : 
+The greedy update rule we use to improve our policy is the idea behind algorithm \ref{algo2} : 
 
 $$ 
 \pi'(s)=\text{arg}\max_{a \in A}q_{\pi}(s,a)
