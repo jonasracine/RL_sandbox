@@ -116,6 +116,20 @@ Prof. Friedrich Eisenbrand
 
 \newpage
 
+
+\begin{abstract}
+
+This dissertation focuses on the intelligent robot control in autonomous navigation using reinforcement learning. More precisely, the purpose of this bachelor project is to make a robot adapt its behavior based on traffic light using reinforcement learning. Reinforcement learning is a machine learning paradigm in which the agent tries to maximize a numerical reward signal (the reward function) in the long run and has only partial feed-back from the environment (in opposition with supervised learning where the feed-back is complete and unsupervised learning where there is no feed-back) : indeed the agent is not told which action to take but must discover it by trying the actions and see which one yields the best reward.
+
+To make things a little bit more formal, we will introduce Markov Decision Processes (MDP), and then consider model-based and model-free algorithm to solve the problem of learning from partial feedback of the environment. 
+
+Then we will implement on our robot our different algorithm to compare them and then discuss about further work. This project is the successor of many projects on the robot in  DISOPT. 
+
+\nocite{Xia2015}
+\nocite{KLMSurvey}
+\end{abstract}
+
+
 \tableofcontents
 
 \newpage
@@ -143,13 +157,6 @@ Prof. Friedrich Eisenbrand
 
 
 
-\part*{Introduction}
-Explain that the agent has to maximize the expected reward after introducing  RL and MDP
-\citep{Xia2015}
-
-The purpose of this bachelor project is to make a robot addapt its behavior based on traffic light using reinforcement learning. Reinforcement learning is a machine learning paradigm in which the agent tries t maximize a numerical reward signal (the reward function) in the long run and has only partial feed-back from the environnement (in opposition with supervised learning where the feed-back is complete and unsupervised learning where there is no feed-back) : indeed the agent is not told which action to take bt must discover it by trying the actions and see which one yields the best reward.
-
-To make things a little bit more formal, we will introduce Markov Decision Processes (MDP).
 
 \part*{Theory}
 
@@ -427,7 +434,7 @@ $$
 
 \begin{figure}[ht]
 \centering
-\includegraphics[scale=0.7]{img/policy_iter_sutton.png}
+\includegraphics[scale=0.7]{img/policy_iter_sutton.PNG}
 \caption{Graphical representation of the interactions between policy improvement and policy evaluation(from \citep{Sutton})}
 \label{fig:Sutton}
 \end{figure}

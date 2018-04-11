@@ -22,7 +22,7 @@
 \setbeamertemplate{navigation symbols}{} 
 %\logo{} 
 %\institute{} 
-%\date{} 
+%\date{April 18, 2018}
 %\subject{} 
 
 \newtheorem{madef}{Definition}
@@ -46,12 +46,18 @@
 
   \begin{itemize}
    \item Framework : the Disopt robot which can follow lines
-   \item The problem : the robot should adapt its speed with           respect to traffic lights
-   \item How : using Markov Decision Process (MDP) and Reinforcement Learning (RL)
+   \item The task : the robot should adapt its speed with respect to traffic lights
+   \item How : using Reinforcement Learning (RL) and Markov Decision Process (MDP)  
   \end{itemize}
 \end{block} 
 \end{frame}
 
+
+\begin{frame}
+\frametitle{Reinforcement learning}
+\centering
+\includegraphics[scale=0.5]{img/RL_graph.png}
+\end{frame}
 
 \begin{frame}
 \frametitle{MDP Intuition}
@@ -307,7 +313,7 @@ $$\pi'(s) = \underset{a \in \mathcal{A}}{\text{argmax } } q_{\pi}(s,a) $$
 \frametitle{Policy iteration algorithm}
 %\includegraphics[scale=0.6]{img/generalized_policy_iter_sutton.png}
 \centering
-\includegraphics[scale=0.7]{img/policy_iter_sutton.png}
+\includegraphics[scale=0.7]{img/policy_iter_sutton.PNG}
 \footnote{From (Sutton \& Barto, 1998)}
 
 \end{frame}
@@ -633,7 +639,7 @@ States values at iterations $0,2,4$ and $6$ (where stable policy is attained)
 \framesubtitle{Evolution of the trajectories during iteration 0,2, and 4 (optimal)}
 \centering
 \includegraphics[scale=0.35]{img/trajectory0.jpg}
-\includegraphics[scale=0.35]{img/trajectory2.jpg}
+\includegraphics[scale=0.35]{img/trajectory2.jpg}\\
 \includegraphics[scale=0.35]{img/trajectory4.jpg}
 \end{frame}
 
@@ -641,7 +647,7 @@ States values at iterations $0,2,4$ and $6$ (where stable policy is attained)
 \frametitle{Conclusion, what have we done ? }
 \begin{block}{}
 \begin{itemize}
-\item We introduced the theoretical framework,the Markov Decision Process
+\item We introduced the theoretical framework: Reinforcement learning and Markov Decision Processes
 \item We solved a simple problem where we know the model
 \end{itemize}
 \end{block}
