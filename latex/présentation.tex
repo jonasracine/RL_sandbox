@@ -45,11 +45,20 @@
 \begin{block}{The problem}
 
   \begin{itemize}
-   \item Framework : the Disopt robot which can follow lines
-   \item The task : the robot should adapt its speed with respect to traffic lights
-   \item How : using Reinforcement Learning (RL) and Markov Decision Process (MDP)  
+   \item Framework: a raspberry pie 3 robot which can follow lines
+   \item The task: the robot should adapt its speed with respect to traffic lights
+   \item How: using Reinforcement Learning (RL) and Markov Decision Process (MDP)  
   \end{itemize}
 \end{block} 
+\end{frame}
+
+\begin{frame}{Presentation}
+\begin{block}{}
+\begin{itemize}
+\item Part I: theoretical insight 
+\item Part II: results from implementation
+\end{itemize}
+\end{block}
 \end{frame}
 
 
@@ -60,7 +69,7 @@
 \end{frame}
 
 \begin{frame}
-\frametitle{MDP Intuition}
+\frametitle{MDP intuition}
 
 \begin{figure}[ht]
 \centering
@@ -118,7 +127,7 @@ Sequence of events : $s_0,a_1,s_1,r_1,a_2,\ldots$
 
 
 \begin{frame}
-\frametitle{MDPs}
+\frametitle{MDP}
 \begin{block}{Definition }
 \begin{itemize}
 \item A set of states $\mathcal{S}=\{s_0,s_1,s_2,\ldots,s_{n}\}$
@@ -129,7 +138,7 @@ Sequence of events : $s_0,a_1,s_1,r_1,a_2,\ldots$
 \end{itemize}
 \end{block}
 
-\begin{block}{Markov Property}
+\begin{block}{Markov property}
 The transitions only depends on the current state and the current action.
 \end{block}
 \end{frame}
@@ -145,7 +154,7 @@ The transitions only depends on the current state and the current action.
 
 
 \begin{frame}
-\frametitle{how to pick actions}
+\frametitle{How to pick actions}
 \begin{madef}
 A \emph{policy} $\pi$ is a probabilistic mapping from the set of states to the set of actions : 
 $$ \pi : \mathcal{A} x \mathcal{S} \mapsto [0,1] $$
@@ -158,27 +167,27 @@ s.t. $\underset{a}{\sum } \pi(a\mid s)=1 \quad \forall s \in \mathcal{S}$
 \begin{frame}
 \frametitle{Issue}
 \begin{alertblock}{How to ?}
-How to asses the goodness of policies so we can find the best one ? 
+How to asses the quality of policies so we can find the best one ? 
 
 What is the best policy ?
 \end{alertblock}
 \end{frame}
 
 \begin{frame}
-\frametitle{how to asses the goodness of policies}
+\frametitle{How to asses the quality of policies}
 \begin{block}{We are interested in maximizing the discounted return}
 $$ G_t= \sum_{k=0}^{\infty}\gamma^k R_{t+k+1} = R_{t+1} + \gamma G_{t+1}$$
 \end{block}
 
 \pause
-\begin{block}{action value while in a state s under $\pi$}
+\begin{block}{Action value while in a state s under $\pi$}
 \begin{equation*}
 q_{\pi}(s,a) = \mathbb{E}_{\pi}[G_t\mid S_t =s,A_t=a]
 \end{equation*}
 \end{block}
 
 \pause
-\begin{block}{state value under policy $\pi$}
+\begin{block}{State value under policy $\pi$}
 \begin{equation*}
 v_{\pi}(s)=\mathbb{E}_{\pi}[G_t \mid S_t=s]
 \end{equation*}
@@ -189,7 +198,7 @@ v_{\pi}(s)=\mathbb{E}_{\pi}[G_t \mid S_t=s]
 \end{frame}
 
 \begin{frame}
-\frametitle{Recursive definition of function values}
+\frametitle{Recursive definition of value functions}
 \begin{block}{action value}
 \begin{equation*}
 \begin{split}
@@ -206,7 +215,7 @@ with $r=R(s')$
 
 
 \begin{frame}
-\frametitle{Recursive definition of function values}
+\frametitle{Recursive definition of value functions}
 \begin{block}{state value}
 \begin{equation*}
 \begin{split}
@@ -226,8 +235,8 @@ with $r=R(s')$
 
 
 \begin{frame}
-\frametitle{how to asses the goodness of policies}
-\begin{block}{how to compare two policies}
+\frametitle{How to asses the quality of policies}
+\begin{block}{How to compare two policies}
 $$ \pi \leq \pi ' \iff  v_{\pi}(s) \leq v_{\pi'}(s) \quad \forall s \in \mathcal{S}
 $$
 \end{block}
@@ -274,7 +283,7 @@ q_{*}(s,a)&=\mathbb{E}\left[ R_{t+1} + \gamma v_{*}(S_ {t+1}) \mid S_t = s, A_t 
 
 
 \begin{frame}
-\frametitle{finding optimal policy from value functions}
+\frametitle{Finding optimal policy from value functions}
 \begin{block}{}
 
 $$\pi_{*}(s)= \underset{a}{\text{argmax }}q_*(s,a)$$
@@ -284,24 +293,33 @@ $$\pi_{*}(s)= \underset{a}{\text{argmax }}q_*(s,a)$$
 \begin{frame}
 \frametitle{Another issue}
 \begin{alertblock}{computational issue}
-If we wanted to solve these equations directly, it would cost a lot of computational power to know exactly the value functions first and then to solve since they are not linear. So how do we do it ? 
+$\mid \mathcal{S} \mid $ equations to solve to evaluate policy:
+\begin{center}
+ $O(\mid \mathcal{S} \mid ^2)$sdljnsojgbsogbsj
+ \end{center}
+$\mid \mathcal{S} \mid $ non linear equations to solve the Bellman optimality equation: 
+\begin{center}
+$O(\mid \mathcal{S} \mid ^3)$ blablablabla
+\end{center}
 \end{alertblock}
 
 \pause 
 \vspace{1cm}
 \centering
 Approximation of value function
+\\ and
+\\Policy iteration
 
 \end{frame}
 
 \begin{frame}
-\frametitle{solving MDPs using dynamic programming}
+\frametitle{Solving MDP using dynamic programming}
 \begin{block}{iterative policy evaluation}
 update rule : 
 $$ v_{k+1}(s)=\sum_{a \in \mathcal{A}}\pi(a \mid s)\sum_{s'}T(a,s,s')\left[R(s')+\gamma v_k(s')\right] $$
 \end{block}
 \pause
-\begin{block}{Policy Improvement}
+\begin{block}{policy improvement}
 $\pi/\pi'$ : old/new policy.
 $$\pi'(s) = \underset{a \in \mathcal{A}}{\text{argmax } } q_{\pi}(s,a) $$
 \end{block}
@@ -335,21 +353,30 @@ $$\pi'(s) = \underset{a \in \mathcal{A}}{\text{argmax } } q_{\pi}(s,a) $$
 \end{frame}
 
 \begin{frame}
-\frametitle{modelization}
-\begin{block}{States}
+\frametitle{Modelization}
+\begin{block}{states}
 \begin{itemize}
-\item \pause position \{0,1,2,\ldots ,L, Lava  \}
-\item \pause speed    \{low, medium, high   \}
+\item  position \{0,1,2,\ldots ,L, Lava  \}
+\item  speed    \{low, medium, high   \}
 \end{itemize}
 \end{block}
 \pause
-\begin{block}{Actions}
+\begin{block}{actions}
 \begin{itemize}
-\item \pause decelerating 
-\item \pause maintaining speed
-\item \pause accelerating 
+\item  decelerating 
+\item  maintaining speed
+\item  accelerating 
 \end{itemize}
 \end{block}
+\pause
+\begin{block}{reward function}
+\begin{itemize}
+\item Lava:reward of -L
+\item L in low speed: reward of +L
+\item any other state : reward of -1
+\end{itemize}
+\end{block}
+
 \end{frame}
 
 
@@ -360,64 +387,52 @@ $$\pi'(s) = \underset{a \in \mathcal{A}}{\text{argmax } } q_{\pi}(s,a) $$
 \begin{tikzpicture}[font=\sffamily]
     % Add the states
         \node[state,
-              text=red,
-              draw=none,
-              fill=gray!50!black] (h0) {0};	
+              text= red ,
+              ] (h0) {0};
 		\node[state,
 			below=1 cm of h0,
-        	text=yellow,
-        	draw=none,
-        	fill=gray!50!black] (m0) {0};
+        	text=orange,
+        	] (m0) {0};
 		\node[state,
 			below= 1 cm of m0,
-        	text=green,
-        	draw=none,
-        	fill=gray!50!black] (l0) {0};
+        	text=black,
+        	] (l0) {0};
          \node[state,
          	 right = 1 cm of h0,
               text=red,
-              draw=none,
-              fill=gray!50!black] (h1) {1};	
+              ] (h1) {1};	
 		\node[state,
 			below=1 cm of h1,
-        	text=yellow,
-        	draw=none,
-        	fill=gray!50!black] (m1) {1};
+        	text=orange,
+        	] (m1) {1};
 		\node[state,
 			below= 1 cm of m1,
-        	text=green,
-        	draw=none,
-        	fill=gray!50!black] (l1) {1};
+        	text=black,
+        	] (l1) {1};
          \node[state,
          	right = 1 cm of h1,
               text=red,
-              draw=none,
-              fill=gray!50!black] (h2) {2};	
+              ] (h2) {2};	
 		\node[state,
 			below=1 cm of h2,
-        	text=yellow,
-        	draw=none,
-        	fill=gray!50!black] (m2) {2};
+        	text=orange,
+        	] (m2) {2};
 		\node[state,
 		below= 1 cm of m2,
-        	text=green,
-        	draw=none,
-        	fill=gray!50!black] (l2) {2};
+        	text=black,
+        	] (l2) {2};
         \node[state,
         	right = 1 cm of h2,
               text=red,
-              draw=none,
-              fill=gray!50!black] (h3) {3};	
+             ] (h3) {3};	
 		\node[state,
 			below=1 cm of h3,
-        	text=yellow,
-        	draw=none,
-        	fill=gray!50!black] (m3) {3};
+        	text=orange,
+        	] (m3) {3};
 		\node[state,
 			below= 1 cm of m3,
-        	text=green,
-        	draw=none,
-        	fill=gray!50!black] (l3) {3};        	       	
+        	text=black,
+        	] (l3) {3};        	       	
 			
 		        
        \draw[every loop,
@@ -436,7 +451,7 @@ $$\pi'(s) = \underset{a \in \mathcal{A}}{\text{argmax } } q_{\pi}(s,a) $$
     \end{tikzpicture}
      \end{center}
 
- red : high speed \\ yellow : medium speed \\green : low speed
+ red : high speed \\ orange : medium speed \\black : low speed
 
 \end{frame}
 
@@ -446,64 +461,52 @@ $$\pi'(s) = \underset{a \in \mathcal{A}}{\text{argmax } } q_{\pi}(s,a) $$
 \begin{tikzpicture}[font=\sffamily]
     % Add the states
         \node[state,
-              text=red,
-              draw=none,
-              fill=gray!50!black] (h0) {0};	
+              text= red ,
+              ] (h0) {0};
 		\node[state,
 			below=1 cm of h0,
-        	text=yellow,
-        	draw=none,
-        	fill=gray!50!black] (m0) {0};
+        	text=orange,
+        	] (m0) {0};
 		\node[state,
 			below= 1 cm of m0,
-        	text=green,
-        	draw=none,
-        	fill=gray!50!black] (l0) {0};
+        	text=black,
+        	] (l0) {0};
          \node[state,
          	 right = 1 cm of h0,
               text=red,
-              draw=none,
-              fill=gray!50!black] (h1) {1};	
+              ] (h1) {1};	
 		\node[state,
 			below=1 cm of h1,
-        	text=yellow,
-        	draw=none,
-        	fill=gray!50!black] (m1) {1};
+        	text=orange,
+        	] (m1) {1};
 		\node[state,
 			below= 1 cm of m1,
-        	text=green,
-        	draw=none,
-        	fill=gray!50!black] (l1) {1};
+        	text=black,
+        	] (l1) {1};
          \node[state,
          	right = 1 cm of h1,
               text=red,
-              draw=none,
-              fill=gray!50!black] (h2) {2};	
+              ] (h2) {2};	
 		\node[state,
 			below=1 cm of h2,
-        	text=yellow,
-        	draw=none,
-        	fill=gray!50!black] (m2) {2};
+        	text=orange,
+        	] (m2) {2};
 		\node[state,
 		below= 1 cm of m2,
-        	text=green,
-        	draw=none,
-        	fill=gray!50!black] (l2) {2};
+        	text=black,
+        	] (l2) {2};
         \node[state,
         	right = 1 cm of h2,
               text=red,
-              draw=none,
-              fill=gray!50!black] (h3) {3};	
+             ] (h3) {3};	
 		\node[state,
 			below=1 cm of h3,
-        	text=yellow,
-        	draw=none,
-        	fill=gray!50!black] (m3) {3};
+        	text=orange,
+        	] (m3) {3};
 		\node[state,
 			below= 1 cm of m3,
-        	text=green,
-        	draw=none,
-        	fill=gray!50!black] (l3) {3};        	       	
+        	text=black,
+        	] (l3) {3};            	       	
 			
 		        
        \draw[every loop,
@@ -528,64 +531,52 @@ $$\pi'(s) = \underset{a \in \mathcal{A}}{\text{argmax } } q_{\pi}(s,a) $$
 \begin{tikzpicture}[font=\sffamily]
     % Add the states
         \node[state,
-              text=red,
-              draw=none,
-              fill=gray!50!black] (h0) {0};	
+              text= red ,
+              ] (h0) {0};
 		\node[state,
 			below=1 cm of h0,
-        	text=yellow,
-        	draw=none,
-        	fill=gray!50!black] (m0) {0};
+        	text=orange,
+        	] (m0) {0};
 		\node[state,
 			below= 1 cm of m0,
-        	text=green,
-        	draw=none,
-        	fill=gray!50!black] (l0) {0};
+        	text=black,
+        	] (l0) {0};
          \node[state,
          	 right = 1 cm of h0,
               text=red,
-              draw=none,
-              fill=gray!50!black] (h1) {1};	
+              ] (h1) {1};	
 		\node[state,
 			below=1 cm of h1,
-        	text=yellow,
-        	draw=none,
-        	fill=gray!50!black] (m1) {1};
+        	text=orange,
+        	] (m1) {1};
 		\node[state,
 			below= 1 cm of m1,
-        	text=green,
-        	draw=none,
-        	fill=gray!50!black] (l1) {1};
+        	text=black,
+        	] (l1) {1};
          \node[state,
          	right = 1 cm of h1,
               text=red,
-              draw=none,
-              fill=gray!50!black] (h2) {2};	
+              ] (h2) {2};	
 		\node[state,
 			below=1 cm of h2,
-        	text=yellow,
-        	draw=none,
-        	fill=gray!50!black] (m2) {2};
+        	text=orange,
+        	] (m2) {2};
 		\node[state,
 		below= 1 cm of m2,
-        	text=green,
-        	draw=none,
-        	fill=gray!50!black] (l2) {2};
+        	text=black,
+        	] (l2) {2};
         \node[state,
         	right = 1 cm of h2,
               text=red,
-              draw=none,
-              fill=gray!50!black] (h3) {3};	
+             ] (h3) {3};	
 		\node[state,
 			below=1 cm of h3,
-        	text=yellow,
-        	draw=none,
-        	fill=gray!50!black] (m3) {3};
+        	text=orange,
+        	] (m3) {3};
 		\node[state,
 			below= 1 cm of m3,
-        	text=green,
-        	draw=none,
-        	fill=gray!50!black] (l3) {3};        	       	
+        	text=black,
+        	] (l3) {3};            	       	
 			
 		        
        \draw[every loop,
@@ -610,8 +601,7 @@ $$\pi'(s) = \underset{a \in \mathcal{A}}{\text{argmax } } q_{\pi}(s,a) $$
 
 
 \begin{frame}
-\frametitle{Results}
-\framesubtitle{States value evolution}
+\frametitle{State value function at different iterations}
 \begin{block}{}
 \centering
 States values at iterations $0,2,4$ and $6$ (where stable policy is attained)
@@ -635,12 +625,25 @@ States values at iterations $0,2,4$ and $6$ (where stable policy is attained)
 \end{frame}
 
 \begin{frame}
-\frametitle{Results when uncertainty introduced into brakes}
-\framesubtitle{Evolution of the trajectories during iteration 0,2, and 4 (optimal)}
+\frametitle{Results for stochastic actions}
+\framesubtitle{decelerating results results in keeping the same speed with probability 1/4}
 \centering
-\includegraphics[scale=0.35]{img/trajectory0.jpg}
-\includegraphics[scale=0.35]{img/trajectory2.jpg}\\
-\includegraphics[scale=0.35]{img/trajectory4.jpg}
+\includegraphics[scale=0.5]{img/trajectory0.jpg}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Results for stochastic actions}
+\framesubtitle{decelerating results results in keeping the same speed with probability 1/4}
+\centering
+\includegraphics[scale=0.5]{img/trajectory2.jpg}\\
+\end{frame}
+
+\begin{frame}
+\frametitle{Results for stochastic actions}
+\framesubtitle{decelerating results results in keeping the same speed with probability 1/4}
+\centering
+\includegraphics[scale=0.5]{img/trajectory4.jpg}
 \end{frame}
 
 \begin{frame}
@@ -669,7 +672,7 @@ States values at iterations $0,2,4$ and $6$ (where stable policy is attained)
 
 \begin{block}{In a not so distant future}
 \begin{itemize}
-\item explore other algorithm and compare them : Monte-Carlo methods, temporal difference learning, Q learning, $\ldots$
+\item Explore other algorithm and compare them : Monte-Carlo methods, temporal difference learning, Q learning, $\ldots$
 \item Neuro-dynamic programming ?
 \end{itemize}
 \end{block}
