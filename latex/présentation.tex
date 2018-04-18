@@ -22,7 +22,7 @@
 \setbeamertemplate{navigation symbols}{} 
 %\logo{} 
 %\institute{} 
-%\date{April 18, 2018}
+\date{May 2, 2018}
 %\subject{} 
 
 \newtheorem{madef}{Definition}
@@ -32,6 +32,8 @@
 
 \begin{frame}
 \titlepage
+\centering
+\includegraphics[scale=1]{img/Wall-E.jpg}
 \end{frame}
 
 %\begin{frame}
@@ -52,24 +54,33 @@
 \end{block} 
 \end{frame}
 
+\begin{frame}
+\frametitle{The task}
+\begin{center}
+\includegraphics[scale=0.4]{img/illustration_traffic_light.png}
+\end{center}
+\end{frame}
+
 \begin{frame}{Presentation}
 \begin{block}{}
 \begin{itemize}
 \item Part I: theoretical insight 
-\item Part II: results from implementation
+\item Part II: results from first implementations
 \end{itemize}
 \end{block}
 \end{frame}
-
 
 \begin{frame}
 \frametitle{Reinforcement learning}
 \centering
 \includegraphics[scale=0.5]{img/RL_graph.png}
+\vspace{1cm}
+
+The agent's job is to find a behavior that maximizes the long-run sum of values of the rewards.
 \end{frame}
 
 \begin{frame}
-\frametitle{MDP intuition}
+\frametitle{Markov Decision Process intuition}
 
 \begin{figure}[ht]
 \centering
@@ -127,8 +138,8 @@ Sequence of events : $s_0,a_1,s_1,r_1,a_2,\ldots$
 
 
 \begin{frame}
-\frametitle{MDP}
-\begin{block}{Definition }
+\frametitle{Markov Decision Process}
+\begin{block}{Definition: (MDP) }
 \begin{itemize}
 \item A set of states $\mathcal{S}=\{s_0,s_1,s_2,\ldots,s_{n}\}$
 \item A set of actions $\mathcal{A}=\{a_1,a_2,a_3,\ldots,a_{k}\}$
@@ -155,27 +166,27 @@ The transitions only depends on the current state and the current action.
 
 \begin{frame}
 \frametitle{How to pick actions}
-\begin{madef}
+\begin{block}{Definition: (policy)}
 A \emph{policy} $\pi$ is a probabilistic mapping from the set of states to the set of actions : 
 $$ \pi : \mathcal{A} x \mathcal{S} \mapsto [0,1] $$
 \\
 s.t. $\underset{a}{\sum } \pi(a\mid s)=1 \quad \forall s \in \mathcal{S}$
 
-\end{madef}
+\end{block}
 \end{frame}
 
 \begin{frame}
 \frametitle{Issue}
-\begin{alertblock}{How to ?}
-How to asses the quality of policies so we can find the best one ? 
+\begin{alertblock}{How to}
+How to asses the quality of policies so we can find the best one? 
 
-What is the best policy ?
+What is the best policy?
 \end{alertblock}
 \end{frame}
 
 \begin{frame}
 \frametitle{How to asses the quality of policies}
-\begin{block}{We are interested in maximizing the discounted return}
+\begin{block}{We are interested in maximizing the discounted return: $G_t$}
 $$ G_t= \sum_{k=0}^{\infty}\gamma^k R_{t+k+1} = R_{t+1} + \gamma G_{t+1}$$
 \end{block}
 
@@ -292,15 +303,15 @@ $$\pi_{*}(s)= \underset{a}{\text{argmax }}q_*(s,a)$$
 
 \begin{frame}
 \frametitle{Another issue}
-\begin{alertblock}{computational issue}
-$\mid \mathcal{S} \mid $ equations to solve to evaluate policy:
-\begin{center}
- $O(\mid \mathcal{S} \mid ^2)$sdljnsojgbsogbsj
- \end{center}
-$\mid \mathcal{S} \mid $ non linear equations to solve the Bellman optimality equation: 
-\begin{center}
-$O(\mid \mathcal{S} \mid ^3)$ blablablabla
-\end{center}
+\begin{alertblock}{Computational issue}
+$\mid \mathcal{S} \mid $ linear equations to solve to evaluate policy\\
+%\begin{center}
+% $O(\mid \mathcal{S} \mid ^2)$
+% \end{center}
+$\mid \mathcal{S} \mid $ non linear equations to solve the Bellman optimality equation 
+%\begin{center}
+%$O(\mid \mathcal{S} \mid ^3)$ blablablabla
+%\end{center}
 \end{alertblock}
 
 \pause 
@@ -371,7 +382,7 @@ $$\pi'(s) = \underset{a \in \mathcal{A}}{\text{argmax } } q_{\pi}(s,a) $$
 \pause
 \begin{block}{reward function}
 \begin{itemize}
-\item Lava:reward of -L
+\item Lava: reward of -L
 \item L in low speed: reward of +L
 \item any other state : reward of -1
 \end{itemize}
@@ -382,7 +393,7 @@ $$\pi'(s) = \underset{a \in \mathcal{A}}{\text{argmax } } q_{\pi}(s,a) $$
 
 \begin{frame}
 \begin{center}
-\frametitle{keeping the same speed graph}
+\frametitle{Keeping the same speed graph}
 
 \begin{tikzpicture}[font=\sffamily]
     % Add the states
@@ -457,7 +468,7 @@ $$\pi'(s) = \underset{a \in \mathcal{A}}{\text{argmax } } q_{\pi}(s,a) $$
 
 \begin{frame}
 \begin{center}
-\frametitle{accelerating graph}
+\frametitle{Accelerating graph}
 \begin{tikzpicture}[font=\sffamily]
     % Add the states
         \node[state,
@@ -527,7 +538,7 @@ $$\pi'(s) = \underset{a \in \mathcal{A}}{\text{argmax } } q_{\pi}(s,a) $$
 
 \begin{frame}
 \begin{center}
-\frametitle{decelerating}
+\frametitle{Decelerating}
 \begin{tikzpicture}[font=\sffamily]
     % Add the states
         \node[state,
@@ -602,6 +613,7 @@ $$\pi'(s) = \underset{a \in \mathcal{A}}{\text{argmax } } q_{\pi}(s,a) $$
 
 \begin{frame}
 \frametitle{State value function at different iterations}
+\framesubtitle{the brighter the better the value}
 
 \centering
 \includegraphics[scale=0.12]{img/value0.jpg}\\
@@ -617,6 +629,7 @@ States values at iteration $0$
 
 \begin{frame}
 \frametitle{State value function at different iterations}
+\framesubtitle{the brighter the better the value}
 \centering
 \includegraphics[scale=0.12]{img/value2.jpg}\\
 \begin{block}{}
@@ -628,6 +641,8 @@ States values at iteration $2$
 
 \begin{frame}
 \frametitle{State value function at different iterations}
+\framesubtitle{the brighter the better the value}
+
 \centering
 \includegraphics[scale=0.12]{img/value4.jpg}\\
 \begin{block}{}
@@ -638,6 +653,8 @@ States values at iteration $4$
 
 \begin{frame}
 \frametitle{State value function at different iterations}
+\framesubtitle{the brighter the better the value}
+
 \centering
 \includegraphics[scale=0.12]{img/value6.jpg}\\
 \begin{block}{}
@@ -658,7 +675,7 @@ States values at iteration $6$ (where stable policy is attained)
 
 \begin{frame}
 \frametitle{Results for stochastic actions}
-\framesubtitle{decelerating results results in keeping the same speed with probability 1/4}
+\framesubtitle{decelerating  results in keeping the same speed with probability 1/4}
 \centering
 \includegraphics[scale=0.5]{img/trajectory1.jpg}
 \end{frame}
@@ -685,11 +702,11 @@ where stable policy is attained
 
 
 \begin{frame}
-\frametitle{Conclusion, what have we done ? }
+\frametitle{Conclusion }
 \begin{block}{}
 \begin{itemize}
 \item We introduced the theoretical framework: Reinforcement learning and Markov Decision Processes
-\item We solved a simple problem where we know the model
+\item We solved a simple problem where we know the model (the transition function in particular)
 \end{itemize}
 \end{block}
 \end{frame}
