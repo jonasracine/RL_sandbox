@@ -11,6 +11,8 @@
 \usetikzlibrary{automata, positioning}
 \usepackage{float}
 \usepackage[normalem]{ulem}
+\usepackage{color}
+\usepackage{xcolor}
 
 
 
@@ -89,22 +91,22 @@ The agent's job is to find a behavior that maximizes the long-run sum of values 
         \node[state,
               text=yellow,
               draw=none,
-              fill=gray!50!black] (0) {0};
+              fill=gray!50!black] (0) {a};
         \node[state,
               right=2cm of 0,
               text=yellow,
               draw=none, 
-              fill=gray!50!black] (1) {1};
+              fill=gray!50!black] (1) {b};
         \node[state,
               below=2cm of 1,
               text=yellow,
               draw=none, 
-              fill=gray!50!black] (2) {2};
+              fill=gray!50!black] (2) {c};
         \node[state,
         	  below = 2cm of 0,
         	  text=yellow,
         	  draw=none,
-        	  fill=gray!50!black] (3) {3};
+        	  fill=gray!50!black] (3) {d};
      
 
               
@@ -114,21 +116,30 @@ The agent's job is to find a behavior that maximizes the long-run sum of values 
         draw=gray,
         fill=gray]
         
-        	(0) edge[loop left, draw = green] node {$0.5$}(0)
-        	(0) edge[ auto = right,draw = red]  node {$0.5$}(2)
-        	(0) edge[auto = right,draw = red] node{$0.5$}  (3)
-            (0) edge[auto = left,draw=green]  node {$0.5$} (1)
-            (1) edge[bend left,auto =left]  node {$1$} (0)
-            (2) edge[]  node {$0.5$}(1)
-			(2) edge[loop right] node{$0.5$} (2)
-			(3) edge[loop right] node{$1$} (3)	
+        	(0) edge[loop left, draw = green] node {{\tiny P = 0.5}}(0)
+        	(0) edge[ auto = right,draw = red]  node {{\tiny P = 0.5}}(2)
+        	(0) edge[auto = right,draw = red] node{{\tiny P = 0.5}}  (3)
+            (0) edge[auto = left,draw=green]  node {{\tiny P = 0.5}} (1)
+            (1) edge[bend left,auto =left]  node {{\tiny P = 1}} (0)
+            (2) edge[]  node {{\tiny P = 0.5}}(1)
+			(2) edge[loop right] node{{\tiny P = 0.5}} (2)
+			(3) edge[loop right] node{{\tiny P = 1}} (3)	
 			       
             ;       
       
     \end{tikzpicture}
 
 \end{figure}
-Sequence of events : $s_0,a_1,s_1,r_1,a_2,\ldots$
+actions possible in state 0:
+\begin{enumerate}
+
+\item \textcolor{green}{$\rightarrow$}: action 1
+\item \textcolor{red}{$\rightarrow$}: action 2
+
+\end{enumerate}
+
+
+Episode : $s_0; a_1,s_1,r_1; a_2,s_2,r_2; \ldots; a_{n},s_{n},r_{n}$
 
 \end{frame}
 
@@ -212,35 +223,50 @@ v_{\pi}(s)=\mathbb{E}_{\pi}[G_t \mid S_t=s]
 \frametitle{Recursive definition of value functions}
 \begin{block}{action value}
 \begin{equation*}
-\begin{split}
-q_{\pi}(s,a) &= \mathbb{E}_{\pi}[G_t\mid S_t =s, A_t=a]
-\\&=\mathbb{E}_{\pi}[R_{t+1}+\gamma G_{t+1}\mid S_t =s, A_t=a]
-\\& =\sum_{s'}\mathbb{P}(s'\mid a,s)\left[r + \gamma \mathbb{E}_{\pi}\left[G_{t+1} \mid S_{t+1}=s' \right]\right]
-\\& = \sum_{s'}\mathbb{P}(s'\mid a,s)\left[r + \gamma v_{\pi}(s') \right]
-\end{split}
+q_{\pi}(s,a) =  \sum_{s'}\mathbb{P}(s'\mid a,s)\left[R(s') + \gamma v_{\pi}(s') \right]
 \end{equation*}
 \end{block}
 
-with $r=R(s')$
-\end{frame}
-
-
-\begin{frame}
-\frametitle{Recursive definition of value functions}
 \begin{block}{state value}
 \begin{equation*}
-\begin{split}
-v_{\pi}(s) &= \mathbb{E}_{\pi}[G_t\mid S_t =s]
-\\&=\mathbb{E}_{\pi}[R_{t+1}+\gamma G_{t+1}\mid S_t =s]
-\\& =\sum_{a }\pi(a \mid s) \sum_{s'}\mathbb{P}(s'\mid a,s)\left[r + \gamma \mathbb{E}_{\pi}\left[G_{t+1} \mid S_{t+1}=s' \right]\right]
-\\& =\sum_{a }\pi(a \mid s) \sum_{s'}\mathbb{P}(s'\mid a,s)\left[r + \gamma v_{\pi}(s') \right]
-\\&=\sum_{a }\pi(a \mid s)q_{\pi}(s,a)
-\end{split}
+v_{\pi}(s) =\sum_{a }\pi(a \mid s) \sum_{s'}\mathbb{P}(s'\mid a,s)\left[R(s') + \gamma v_{\pi}(s') \right]
 \end{equation*}
 \end{block}
-
-with $r=R(s')$
 \end{frame}
+
+%\begin{frame}
+%\frametitle{Recursive definition of value functions}
+%\begin{block}{action value}
+%\begin{equation*}
+%\begin{split}
+%q_{\pi}(s,a) &= \mathbb{E}_{\pi}[G_t\mid S_t =s, A_t=a]
+%\\&=\mathbb{E}_{\pi}[R_{t+1}+\gamma G_{t+1}\mid S_t =s, A_t=a]
+%\\& =\sum_{s'}\mathbb{P}(s'\mid a,s)\left[r + \gamma \mathbb{E}_{\pi}\left[G_{t+1} \mid S_{t+1}=s' \right]\right]
+%\\& = \sum_{s'}\mathbb{P}(s'\mid a,s)\left[r + \gamma v_{\pi}(s') \right]
+%\end{split}
+%\end{equation*}
+%\end{block}
+%
+%with $r=R(s')$
+%\end{frame}
+
+
+%\begin{frame}
+%\frametitle{Recursive definition of value functions}
+%\begin{block}{state value}
+%\begin{equation*}
+%\begin{split}
+%v_{\pi}(s) &= \mathbb{E}_{\pi}[G_t\mid S_t =s]
+%\\&=\mathbb{E}_{\pi}[R_{t+1}+\gamma G_{t+1}\mid S_t =s]
+%\\& =\sum_{a }\pi(a \mid s) \sum_{s'}\mathbb{P}(s'\mid a,s)\left[r + \gamma \mathbb{E}_{\pi}\left[G_{t+1} \mid S_{t+1}=s' \right]\right]
+%\\& =\sum_{a }\pi(a \mid s) \sum_{s'}\mathbb{P}(s'\mid a,s)\left[r + \gamma v_{\pi}(s') \right]
+%\\&=\sum_{a }\pi(a \mid s)q_{\pi}(s,a)
+%\end{split}
+%\end{equation*}
+%\end{block}
+%
+%with $r=R(s')$
+%\end{frame}
 
 
 
@@ -267,24 +293,19 @@ $$ \pi_{*} \quad s.t. \quad \forall \pi : \pi_{*}\geq \pi $$
 \begin{frame}
 \frametitle{Bellman optimality equations}
 
-The optimal policy $\pi_{*}$ has value functions  $v_*$ and $q_*$
+We can associate the value function $v_*$ and $q_*$ to the optimal policy $\pi_{*}$   
 
 \begin{block}{}
 
 \begin{equation*}
-\begin{split}
-v_{*}(s)&=\underset{a}{\text{max }} q_{*}(s,a)
-\\&=\max_{a} \sum_{s'}\mathbb{P}(s'\mid s,a)[R(s')+\gamma v_{*}(s')]
-\end{split}
+v_{*}(s)=\underset{a}{\text{max }} q_{*}(s,a)
 \end{equation*}
 \end{block}
 
 \begin{block}{}
 \begin{equation*}
 \begin{split}
-q_{*}(s,a)&=\mathbb{E}\left[ R_{t+1} + \gamma v_{*}(S_ {t+1}) \mid S_t = s, A_t = a \right]
-\\&=\mathbb{E}\left[ R_{t+1} + \gamma \max_{a'} q_{*}(S_{t+1},a') \mid S_t = s, A_t = a \right]
-\\&= \sum_{s'}\mathbb{P}(s' \mid s,a)[R(s')+\gamma \max_{a'}q_{*}(s',a')]
+q_{*}(s,a) = \sum_{s'}\mathbb{P}(s' \mid s,a)[R(s')+\gamma \max_{a'}q_{*}(s',a')]
 \end{split}
 \end{equation*}
 \end{block}
@@ -323,30 +344,62 @@ Approximation of value function
 
 \end{frame}
 
-\begin{frame}
-\frametitle{Solving MDP using dynamic programming}
-\begin{block}{iterative policy evaluation}
-update rule : 
-$$ v_{k+1}(s)=\sum_{a \in \mathcal{A}}\pi(a \mid s)\sum_{s'}T(a,s,s')\left[R(s')+\gamma v_k(s')\right] $$
-\end{block}
-\pause
-\begin{block}{policy improvement}
-$\pi/\pi'$ : old/new policy.
-$$\pi'(s) = \underset{a \in \mathcal{A}}{\text{argmax } } q_{\pi}(s,a) $$
-\end{block}
-
-\end{frame}
+%\begin{frame}
+%\frametitle{Solving MDP using dynamic programming}
+%\begin{block}{iterative policy evaluation}
+%update rule : 
+%$$ v_{k+1}(s)=\sum_{a \in \mathcal{A}}\pi(a \mid s)\sum_{s'}T(a,s,s')\left[R(s')+\gamma v_k(s')\right] $$
+%\end{block}
+%\pause
+%\begin{block}{policy improvement}
+%$\pi/\pi'$ : old/new policy.
+%$$\pi'(s) = \underset{a \in \mathcal{A}}{\text{argmax } } q_{\pi}(s,a) $$
+%\end{block}
+%
+%\end{frame}
 
 
 \begin{frame}
 \frametitle{Policy iteration algorithm}
+\framesubtitle{solving MDP using dynamic programming }
 %\includegraphics[scale=0.6]{img/generalized_policy_iter_sutton.png}
 \centering
 \includegraphics[scale=0.7]{img/policy_iter_sutton.PNG}
 \footnote{From (Sutton \& Barto, 1998)}
-
 \end{frame}
 
+
+%\begin{frame}
+%\frametitle{Monte-Carlo methods}
+%\framesubtitle{model-free methods}
+%\begin{block}{Idea}
+%\begin{itemize}
+%\item evaluates action value 
+%\item improves the policy greedily (as before)
+%\item learns from experience by averaging the reward received in episodes
+%\end{itemize}
+%\end{block}
+%\end{frame}
+%
+%\begin{frame}
+%\frametitle{One last algorithm: Q-learning}
+%\framesubtitle{model-free algorithms}
+%\begin{block}{Update rule}
+%\begin{equation*}
+%\centering
+%Q(S_t,A_t) \leftarrow Q(S_t,A_t)+\alpha \left[ R_{t+1} + \gamma \max_{a}Q(S_{t+1},a)-Q(S_t,A_t) \right]
+%\end{equation*}
+%\end{block}
+%\pause
+%\begin{block}{Properties}
+%\begin{itemize}
+%\item learns from raw experience without a model if the environment
+%\item does not wait for the end of the episode to update the state value actions
+%\item approximation of the optimal action values not the states values
+%\item can be shown to converge quadratically as the number of visits of the  pairs state-action approaches infinity
+%\end{itemize}
+%\end{block}
+%\end{frame}
 
 \begin{frame}
 \frametitle{Our problem}
@@ -393,90 +446,91 @@ $$\pi'(s) = \underset{a \in \mathcal{A}}{\text{argmax } } q_{\pi}(s,a) $$
 
 \begin{frame}
 \begin{center}
-\frametitle{Keeping the same speed graph}
+\frametitle{Action of keeping the same speed graph}
 
 \begin{tikzpicture}[font=\sffamily]
     % Add the states
-        \node[state,
-              text= red ,
-              ] (h0) {0};
+        %\node[state,draw=none] (d1) [left of=1] {};
+        \node[state,draw = none
+              ] (h0) {};
 		\node[state,
 			below=1 cm of h0,
-        	text=orange,
-        	] (m0) {0};
+        	draw=none
+        	] (m0) {};
 		\node[state,
 			below= 1 cm of m0,
         	text=black,
         	] (l0) {0};
          \node[state,
          	 right = 1 cm of h0,
-              text=red,
-              ] (h1) {1};	
+             draw=none
+              ] (h1) {};	
 		\node[state,
 			below=1 cm of h1,
-        	text=orange,
-        	] (m1) {1};
+        	draw = none
+        	] (m1) {};
 		\node[state,
 			below= 1 cm of m1,
         	text=black,
         	] (l1) {1};
          \node[state,
          	right = 1 cm of h1,
-              text=red,
-              ] (h2) {2};	
+              draw = none
+              ] (h2) {};	
 		\node[state,
 			below=1 cm of h2,
-        	text=orange,
-        	] (m2) {2};
+        	draw = none,
+        	] (m2) {};
 		\node[state,
 		below= 1 cm of m2,
         	text=black,
         	] (l2) {2};
         \node[state,
         	right = 1 cm of h2,
-              text=red,
-             ] (h3) {3};	
+        	draw = none
+             ] (h3) {};	
 		\node[state,
 			below=1 cm of h3,
-        	text=orange,
-        	] (m3) {3};
+        	draw = none
+        	] (m3) {};
 		\node[state,
 			below= 1 cm of m3,
         	text=black,
-        	] (l3) {3};        	       	
-			
+        	] (l3) {3};   	
+		\node[state,draw=none] (d1) [right = 1 cm of l3] {};	
+		\node[draw=none] (legend1) [left=0.3 cm of l0] {low speed};
 		        
        \draw[every loop,
         auto=right,
         >=latex,
-        draw=gray,
-        fill=gray]
+        draw=blue,
+        fill=blue]
 			(l0) edge[](l1)
 			(l1) edge[] (l2)	
 			(l2) edge[] (l3)
-			(m0) edge[bend left] (m2)
-			(m1) edge[bend right] (m3)
-			(h0) edge[bend left] (h3)
+			(l3) edge[dashed] (d1)
+			
 	       
             ;
     \end{tikzpicture}
      \end{center}
 
- red : high speed \\ orange : medium speed \\black : low speed
+
 
 \end{frame}
 
 \begin{frame}
 \begin{center}
-\frametitle{Accelerating graph}
+\frametitle{Action of keeping the same speed graph}
+
 \begin{tikzpicture}[font=\sffamily]
     % Add the states
-        \node[state,
-              text= red ,
-              ] (h0) {0};
+        %\node[state,draw=none] (d1) [left of=1] {};
+        \node[state,draw = none
+              ] (h0) {};
 		\node[state,
 			below=1 cm of h0,
-        	text=orange,
+			text = black
         	] (m0) {0};
 		\node[state,
 			below= 1 cm of m0,
@@ -484,11 +538,11 @@ $$\pi'(s) = \underset{a \in \mathcal{A}}{\text{argmax } } q_{\pi}(s,a) $$
         	] (l0) {0};
          \node[state,
          	 right = 1 cm of h0,
-              text=red,
-              ] (h1) {1};	
+             draw=none
+              ] (h1) {};	
 		\node[state,
 			below=1 cm of h1,
-        	text=orange,
+        	text = black
         	] (m1) {1};
 		\node[state,
 			below= 1 cm of m1,
@@ -496,11 +550,11 @@ $$\pi'(s) = \underset{a \in \mathcal{A}}{\text{argmax } } q_{\pi}(s,a) $$
         	] (l1) {1};
          \node[state,
          	right = 1 cm of h1,
-              text=red,
-              ] (h2) {2};	
+              draw = none
+              ] (h2) {};	
 		\node[state,
 			below=1 cm of h2,
-        	text=orange,
+        	text = black,
         	] (m2) {2};
 		\node[state,
 		below= 1 cm of m2,
@@ -508,45 +562,243 @@ $$\pi'(s) = \underset{a \in \mathcal{A}}{\text{argmax } } q_{\pi}(s,a) $$
         	] (l2) {2};
         \node[state,
         	right = 1 cm of h2,
-              text=red,
-             ] (h3) {3};	
+        	draw = none
+             ] (h3) {};	
 		\node[state,
 			below=1 cm of h3,
-        	text=orange,
+        	text=black
         	] (m3) {3};
 		\node[state,
 			below= 1 cm of m3,
         	text=black,
-        	] (l3) {3};            	       	
-			
+        	] (l3) {3};   	
+		\node[state,draw=none] (d1) [right = 1 cm of l3] {};	
+		\node[state,draw=none] (d2) [right = 1 cm of m3] {};
+		\node[state,draw=none] (d3) [right = 1 cm of h3] {};
+		\node[draw=none] (legend1) [left=0.3 cm of l0] {low speed};
+		\node[draw=none] (legend2) [left = 0.3 cm of m0] {\textcolor{black}{medium speed}};
 		        
        \draw[every loop,
         auto=right,
         >=latex,
-        draw=gray,
-        fill=gray]
+        draw=blue,
+        fill=blue]
+			(l0) edge[](l1)
+			(l1) edge[] (l2)	
+			(l2) edge[] (l3)
+			(l3) edge[dashed] (d1)
+			(m0) edge[bend left] (m2)
+			(m1) edge[bend left] (m3)
+			(m2) edge[bend left,dashed] (d2)
+			
+	       
+            ;
+    \end{tikzpicture}
+     \end{center}
+
+
+
+\end{frame}
+
+
+\begin{frame}
+\begin{center}
+\frametitle{Action of keeping the same speed graph}
+
+\begin{tikzpicture}[font=\sffamily]
+    % Add the states
+        %\node[state,draw=none] (d1) [left of=1] {};
+        \node[state,text = black
+              ] (h0) {0};
+		\node[state,
+			below=1 cm of h0,
+			text = black
+        	] (m0) {0};
+		\node[state,
+			below= 1 cm of m0,
+        	text=black,
+        	] (l0) {0};
+         \node[state,
+         	 right = 1 cm of h0,
+             text = black
+              ] (h1) {1};	
+		\node[state,
+			below=1 cm of h1,
+        	text = black
+        	] (m1) {1};
+		\node[state,
+			below= 1 cm of m1,
+        	text=black,
+        	] (l1) {1};
+         \node[state,
+         	right = 1 cm of h1,
+         	text = black
+              ] (h2) {2};	
+		\node[state,
+			below=1 cm of h2,
+        	text = black,
+        	] (m2) {2};
+		\node[state,
+		below= 1 cm of m2,
+        	text=black,
+        	] (l2) {2};
+        \node[state,
+        	right = 1 cm of h2,
+        	text = black
+             ] (h3) {3};	
+		\node[state,
+			below=1 cm of h3,
+        	text=black
+        	] (m3) {3};
+		\node[state,
+			below= 1 cm of m3,
+        	text=black,
+        	] (l3) {3};   	
+		\node[state,draw=none] (d1) [right = 1 cm of l3] {};	
+		\node[state,draw=none] (d2) [right = 1 cm of m3] {};
+		\node[state,draw=none] (d3) [right = 1 cm of h3] {};
+		\node[state,draw=none] (d4) [right = 1 cm of d3] {};
+		\node[draw=none] (legend1) [left=0.3 cm of l0] {low speed};
+		\node[draw=none] (legend2) [left = 0.3 cm of m0] {\textcolor{black}{medium speed}};
+		\node[draw=none] (legend3) [left = 0.3 cm of h0] {\textcolor{black}{high speed}};
+		        
+       \draw[every loop,
+        auto=right,
+        >=latex,
+        draw=blue,
+        fill=blue]
+			(l0) edge[](l1)
+			(l1) edge[] (l2)	
+			(l2) edge[] (l3)
+			(l3) edge[dashed] (d1)
+			(m0) edge[bend left] (m2)
+			(m1) edge[bend left] (m3)
+			(m2) edge[bend left,dashed] (d2)
+			(h0) edge[bend left] (h3)
+			(h1) edge[bend left,dashed] (d3)
+			
+	       
+            ;
+    \end{tikzpicture}
+     \end{center}
+
+
+
+\end{frame}
+
+
+
+
+\begin{frame}
+\begin{center}
+\frametitle{Action of accelerating}
+
+\begin{tikzpicture}[font=\sffamily]
+    % Add the states
+        %\node[state,draw=none] (d1) [left of=1] {};
+        \node[state,text = black
+              ] (h0) {0};
+		\node[state,
+			below=1 cm of h0,
+			text = black
+        	] (m0) {0};
+		\node[state,
+			below= 1 cm of m0,
+        	text=black,
+        	] (l0) {0};
+         \node[state,
+         	 right = 1 cm of h0,
+             text = black
+              ] (h1) {1};	
+		\node[state,
+			below=1 cm of h1,
+        	text = black
+        	] (m1) {1};
+		\node[state,
+			below= 1 cm of m1,
+        	text=black,
+        	] (l1) {1};
+         \node[state,
+         	right = 1 cm of h1,
+         	text = black
+              ] (h2) {2};	
+		\node[state,
+			below=1 cm of h2,
+        	text = black,
+        	] (m2) {2};
+		\node[state,
+		below= 1 cm of m2,
+        	text=black,
+        	] (l2) {2};
+        \node[state,
+        	right = 1 cm of h2,
+        	text = black
+             ] (h3) {3};	
+		\node[state,
+			below=1 cm of h3,
+        	text=black
+        	] (m3) {3};
+		\node[state,
+			below= 1 cm of m3,
+        	text=black,
+        	] (l3) {3};   	
+		\node[state,draw=none] (d1) [right = 1 cm of l3] {};	
+		\node[state,draw=none] (d2) [right = 1 cm of m3] {};
+		\node[state,draw=none] (d3) [right = 1 cm of h3] {};
+		\node[state,draw=none] (d4) [right = 1 cm of d3] {};
+		\node[draw=none] (legend1) [left=0.3 cm of l0] {low speed};
+		\node[draw=none] (legend2) [left = 0.3 cm of m0] {\textcolor{black}{medium speed}};
+		\node[draw=none] (legend3) [left = 0.3 cm of h0] {\textcolor{black}{high speed}};
+		        
+       \draw[every loop,
+        auto=right,
+        >=latex,
+        draw=gray!30,
+        fill=gray!30]
+			(l0) edge[](l1)
+			(l1) edge[] (l2)	
+			(l2) edge[] (l3)
+			(l3) edge[dashed] (d1)
+			(m0) edge[bend left] (m2)
+			(m1) edge[bend left] (m3)
+			(m2) edge[bend left,dashed] (d2)
+			(h0) edge[bend left] (h3)
+			(h1) edge[bend left,dashed] (d3)
+            ;
+      \draw[every loop,
+        auto=right,
+        >=latex,
+        draw=red,
+        fill=red]
 			(l0) edge[](m2)
 			(l1) edge[] (m3)	
 			(m0) edge[] (h3)
 			(h0) edge[bend left] (h3)
-	       
-            ;
+			(h1) edge[bend left,dashed] (d3)
+			(l2) edge[dashed] (d2)
+			(m1) edge[dashed] (d3);
     \end{tikzpicture}
- \end{center}
+     \end{center}
+
+
+
 \end{frame}
+		        
+
 
 
 \begin{frame}
 \begin{center}
 \frametitle{Decelerating}
+
 \begin{tikzpicture}[font=\sffamily]
     % Add the states
-        \node[state,
-              text= red ,
+        %\node[state,draw=none] (d1) [left of=1] {};
+        \node[state,text = black
               ] (h0) {0};
 		\node[state,
 			below=1 cm of h0,
-        	text=orange,
+			text = black
         	] (m0) {0};
 		\node[state,
 			below= 1 cm of m0,
@@ -554,11 +806,11 @@ $$\pi'(s) = \underset{a \in \mathcal{A}}{\text{argmax } } q_{\pi}(s,a) $$
         	] (l0) {0};
          \node[state,
          	 right = 1 cm of h0,
-              text=red,
+             text = black
               ] (h1) {1};	
 		\node[state,
 			below=1 cm of h1,
-        	text=orange,
+        	text = black
         	] (m1) {1};
 		\node[state,
 			below= 1 cm of m1,
@@ -566,11 +818,11 @@ $$\pi'(s) = \underset{a \in \mathcal{A}}{\text{argmax } } q_{\pi}(s,a) $$
         	] (l1) {1};
          \node[state,
          	right = 1 cm of h1,
-              text=red,
+         	text = black
               ] (h2) {2};	
 		\node[state,
 			below=1 cm of h2,
-        	text=orange,
+        	text = black,
         	] (m2) {2};
 		\node[state,
 		below= 1 cm of m2,
@@ -578,23 +830,56 @@ $$\pi'(s) = \underset{a \in \mathcal{A}}{\text{argmax } } q_{\pi}(s,a) $$
         	] (l2) {2};
         \node[state,
         	right = 1 cm of h2,
-              text=red,
+        	text = black
              ] (h3) {3};	
 		\node[state,
 			below=1 cm of h3,
-        	text=orange,
+        	text=black
         	] (m3) {3};
 		\node[state,
 			below= 1 cm of m3,
         	text=black,
-        	] (l3) {3};            	       	
-			
+        	] (l3) {3};   	
+		\node[state,draw=none] (d1) [right = 1 cm of l3] {};	
+		\node[state,draw=none] (d2) [right = 1 cm of m3] {};
+		\node[state,draw=none] (d3) [right = 1 cm of h3] {};
+		\node[state,draw=none] (d4) [right = 1 cm of d3] {};
+		\node[draw=none] (legend1) [left=0.3 cm of l0] {low speed};
+		\node[draw=none] (legend2) [left = 0.3 cm of m0] {\textcolor{black}{medium speed}};
+		\node[draw=none] (legend3) [left = 0.3 cm of h0] {\textcolor{black}{high speed}};
 		        
        \draw[every loop,
         auto=right,
         >=latex,
-        draw=gray,
-        fill=gray]
+        draw=gray!30,
+        fill=gray!30]
+			(l0) edge[](l1)
+			(l1) edge[] (l2)	
+			(l2) edge[] (l3)
+			(l3) edge[dashed] (d1)
+			(m0) edge[bend left] (m2)
+			(m1) edge[bend left] (m3)
+			(m2) edge[bend left,dashed] (d2)
+			(h0) edge[bend left] (h3)
+			(h1) edge[bend left,dashed] (d3)
+            ;
+      \draw[every loop,
+        auto=right,
+        >=latex,
+        draw=gray!30,
+        fill=gray!30]
+			(l0) edge[](m2)
+			(l1) edge[] (m3)	
+			(m0) edge[] (h3)
+			(h0) edge[bend left] (h3)
+			(h1) edge[bend left,dashed] (d3)
+			(l2) edge[dashed] (d2)
+			(m1) edge[dashed] (d3);
+	\draw[every loop,
+        auto=right,
+        >=latex,
+        draw=black,
+        fill=black]
 			(l0) edge[loop below](l0)
 			(l1) edge[loop below] (l1)	
 			(l2) edge[loop below] (l2)
@@ -603,12 +888,15 @@ $$\pi'(s) = \underset{a \in \mathcal{A}}{\text{argmax } } q_{\pi}(s,a) $$
 			(m1) edge[] (l2)
 			(m2) edge[] (l3)
 			(h0) edge[] (m2)
-			(h1) edge[] (m3)
-	       
-            ;
+			(h1) edge[] (m3);
     \end{tikzpicture}
- \end{center}
+     \end{center}
+
+
+
 \end{frame}
+		        
+
 
 
 \begin{frame}
@@ -619,7 +907,7 @@ $$\pi'(s) = \underset{a \in \mathcal{A}}{\text{argmax } } q_{\pi}(s,a) $$
 \includegraphics[scale=0.12]{img/value0.jpg}\\
 \begin{block}{}
 \centering
-States values at iteration $0$ 
+States values at iteration $0$, all the state values are equal to $0$
 \end{block}
 
 \end{frame}
@@ -673,6 +961,148 @@ States values at iteration $6$ (where stable policy is attained)
 \includegraphics[scale=0.5]{img/trajectory.jpg}
 \end{frame}
 
+
+\begin{frame}
+\frametitle{Deterministic actions are not really realistic}
+\begin{columns}[c]
+\column{1.5in}
+\begin{tikzpicture}[font=\sffamily]
+         \node[state] (a) {a};
+        \node[state] [right = 1 cm of a] (b) {b};
+        \node[state] [below = 1 cm of a] (c) {c};
+	\draw[every loop,
+        auto=right,
+        >=latex,
+        draw=black,
+        fill=black]
+			(a) edge[loop above,draw = red] node{{\tiny p= 1}} (a)
+			(a) edge[draw = green] node{{\tiny p=1}} (b)
+			(a) edge[draw = black] node{{\tiny p=1}} (c);
+    \end{tikzpicture}\\
+\centering
+Deterministic actions
+
+\column{1.5in}
+\begin{tikzpicture}[font=\sffamily]
+         \node[state] (a) {a};
+        \node[state] [right = 1 cm of a] (b) {b};
+        \node[state] [below = 1 cm of a] (c) {c};
+	\draw[every loop,
+        auto=right,
+        >=latex,
+        draw=black,
+        fill=black]
+			(a) edge[loop above,draw = red] node{{\tiny p= 0.25}} (a)
+			(a) edge[bend left,draw = red] node{{\tiny p= 0.75}} (b)
+			(a) edge[draw = green] node{{\tiny p=1}} (b)
+			(a) edge[draw = black] node{{\tiny p=1}} (c);
+    \end{tikzpicture}\\
+    \centering 
+    Stochastic actions
+    \end{columns}
+
+\end{frame}
+
+
+
+\begin{frame}
+\begin{center}
+\frametitle{Decelerating for decelerating being a stochastic action}
+
+\begin{tikzpicture}[font=\sffamily]
+    % Add the states
+        %\node[state,draw=none] (d1) [left of=1] {};
+        \node[state,text = black
+              ] (h0) {0};
+		\node[state,
+			below=1 cm of h0,
+			text = black
+        	] (m0) {0};
+		\node[state,
+			below= 1 cm of m0,
+        	text=black,
+        	] (l0) {0};
+         \node[state,
+         	 right = 1 cm of h0,
+             text = black
+              ] (h1) {1};	
+		\node[state,
+			below=1 cm of h1,
+        	text = black
+        	] (m1) {1};
+		\node[state,
+			below= 1 cm of m1,
+        	text=black,
+        	] (l1) {1};
+         \node[state,
+         	right = 1 cm of h1,
+         	text = black
+              ] (h2) {2};	
+		\node[state,
+			below=1 cm of h2,
+        	text = black,
+        	] (m2) {2};
+		\node[state,
+		below= 1 cm of m2,
+        	text=black,
+        	] (l2) {2};
+        \node[state,
+        	right = 1 cm of h2,
+        	text = black
+             ] (h3) {3};	
+		\node[state,
+			below=1 cm of h3,
+        	text=black
+        	] (m3) {3};
+		\node[state,
+			below= 1 cm of m3,
+        	text=black,
+        	] (l3) {3};   	
+		\node[state,draw=none] (d1) [right = 1 cm of l3] {};	
+		\node[state,draw=none] (d2) [right = 1 cm of m3] {};
+		\node[state,draw=none] (d3) [right = 1 cm of h3] {};
+		\node[state,draw=none] (d4) [right = 1 cm of d3] {};
+		\node[draw=none] (legend1) [left=0.3 cm of l0] {low speed};
+		\node[draw=none] (legend2) [left = 0.3 cm of m0] {\textcolor{black}{medium speed}};
+		\node[draw=none] (legend3) [left = 0.3 cm of h0] {\textcolor{black}{high speed}};
+		        
+       
+	\draw[every loop,
+        auto=left,
+        >=latex,
+        draw=black,
+        fill=black]
+			(l0) edge[loop below, draw = black!40!green] node{{\textcolor{black!40!green}{\tiny p=0.75}}}(l0)
+			(l1) edge[loop below, draw = black!40!green] node{{\textcolor{black!40!green}{\tiny p=0.75}}} (l1)	
+			(l2) edge[loop below, draw = black!40!green] node{{\textcolor{black!40!green}{\tiny p=0.75}}}(l2)
+			(l3) edge[loop below, draw = black!40!green] node{{\textcolor{black!40!green}{\tiny p=0.75}}}(l3)
+			(m0) edge[ draw = black!40!green] node{{\textcolor{black!40!green}{\tiny p=0.75}}}(l1)
+			(m1) edge[ draw = black!40!green] node{{\textcolor{black!40!green}{\tiny p=0.75}}} (l2)
+			(m2) edge[ draw = black!40!green] node{{\textcolor{black!40!green}{\tiny p=0.75}}}(l3)
+			(h0) edge[ draw = black!40!green] node{{\textcolor{black!40!green}{\tiny p=0.75}}} (m2)
+			(h1) edge[ draw = black!40!green] node{{\textcolor{black!40!green}{\tiny p=0.75}}} (m3);
+			
+	   \pause    \draw[every loop,
+        auto=left,
+        >=latex,
+        draw=red,
+        fill=red]
+			(l0) edge[] node{{\textcolor{red}{\tiny p=0.25}}}(l1)
+			(l1) edge[]node{{\textcolor{red}{\tiny p=0.25}}} (l2)	
+			(l2) edge[]node{{\textcolor{red}{\tiny p=0.25}}} (l3)
+			(l3) edge[dashed] node{{\textcolor{red}{\tiny p=0.25}}}(d1)
+			(m0) edge[bend left] node{{\textcolor{red}{\tiny p=0.25}}}(m2)
+			(m1) edge[bend left] node{{\textcolor{red}{\tiny p=0.25}}}(m3)
+			(m2) edge[bend left,dashed]node{{\textcolor{red}{\tiny p=0.25}}} (d2)
+			(h0) edge[bend left]node{{\textcolor{red}{\tiny p=0.25}}} (h3)
+			(h1) edge[bend left,dashed] node{{\textcolor{red}{\tiny p=0.25}}}(d3);
+    \end{tikzpicture}
+     \end{center}
+
+
+
+\end{frame}
+
 \begin{frame}
 \frametitle{Results for stochastic actions}
 \framesubtitle{decelerating  results in keeping the same speed with probability 1/4}
@@ -701,6 +1131,8 @@ where stable policy is attained
 \end{frame}
 
 
+
+
 \begin{frame}
 \frametitle{Conclusion }
 \begin{block}{}
@@ -722,12 +1154,13 @@ where stable policy is attained
 \begin{itemize}
 \item Add the traffic light into this setting
 \item Find the distance from the robot's camera to the traffic light
+\item getting data from the robot 
 \end{itemize}
 \end{block}
 
 \begin{block}{In a not so distant future}
 \begin{itemize}
-\item Explore other algorithm and compare them : Monte-Carlo methods, temporal difference learning, Q learning, $\ldots$
+\item Explore other algorithms and compare them : Monte-Carlo methods, temporal difference learning, Q learning, Expected Sarsa$\ldots$
 \item Neuro-dynamic programming ?
 \end{itemize}
 \end{block}
