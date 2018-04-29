@@ -14,7 +14,9 @@
 \usepackage{color}
 \usepackage{xcolor}
 
-
+\expandafter\def\expandafter\insertshorttitle\expandafter{%
+	\insertshorttitle\hfill%
+    \insertframenumber\,/\,\inserttotalframenumber}
 
 
 
@@ -66,7 +68,7 @@
 \begin{frame}{Presentation}
 \begin{block}{}
 \begin{itemize}
-\item Part I: theoretical insight 
+\item Part I: theoretical background 
 \item Part II: results from first implementations
 \end{itemize}
 \end{block}
@@ -427,9 +429,9 @@ Approximation of value function
 \pause
 \begin{block}{actions}
 \begin{itemize}
-\item  decelerating 
+\item  slowing down
 \item  maintaining speed
-\item  accelerating 
+\item  speeding up 
 \end{itemize}
 \end{block}
 \pause
@@ -446,7 +448,7 @@ Approximation of value function
 
 \begin{frame}
 \begin{center}
-\frametitle{Action of keeping the same speed graph}
+\frametitle{Maintaining speed}
 
 \begin{tikzpicture}[font=\sffamily]
     % Add the states
@@ -513,6 +515,7 @@ Approximation of value function
 	       
             ;
     \end{tikzpicture}
+    
      \end{center}
 
 
@@ -521,7 +524,7 @@ Approximation of value function
 
 \begin{frame}
 \begin{center}
-\frametitle{Action of keeping the same speed graph}
+\frametitle{Maintaining speed}
 
 \begin{tikzpicture}[font=\sffamily]
     % Add the states
@@ -603,7 +606,7 @@ Approximation of value function
 
 \begin{frame}
 \begin{center}
-\frametitle{Action of keeping the same speed graph}
+\frametitle{Maintaining speed}
 
 \begin{tikzpicture}[font=\sffamily]
     % Add the states
@@ -691,8 +694,7 @@ Approximation of value function
 
 \begin{frame}
 \begin{center}
-\frametitle{Action of accelerating}
-
+\frametitle{Speeding up}
 \begin{tikzpicture}[font=\sffamily]
     % Add the states
         %\node[state,draw=none] (d1) [left of=1] {};
@@ -789,7 +791,7 @@ Approximation of value function
 
 \begin{frame}
 \begin{center}
-\frametitle{Decelerating}
+\frametitle{Slowing down}
 
 \begin{tikzpicture}[font=\sffamily]
     % Add the states
@@ -981,7 +983,7 @@ States values at iteration $6$ (where stable policy is attained)
     \end{tikzpicture}\\
 \centering
 Deterministic actions
-
+\pause
 \column{1.5in}
 \begin{tikzpicture}[font=\sffamily]
          \node[state] (a) {a};
@@ -1072,13 +1074,6 @@ Deterministic actions
         >=latex,
         draw=black,
         fill=black]
-			(l0) edge[loop below, draw = black!40!green] node{{\textcolor{black!40!green}{\tiny p=0.75}}}(l0)
-			(l1) edge[loop below, draw = black!40!green] node{{\textcolor{black!40!green}{\tiny p=0.75}}} (l1)	
-			(l2) edge[loop below, draw = black!40!green] node{{\textcolor{black!40!green}{\tiny p=0.75}}}(l2)
-			(l3) edge[loop below, draw = black!40!green] node{{\textcolor{black!40!green}{\tiny p=0.75}}}(l3)
-			(m0) edge[ draw = black!40!green] node{{\textcolor{black!40!green}{\tiny p=0.75}}}(l1)
-			(m1) edge[ draw = black!40!green] node{{\textcolor{black!40!green}{\tiny p=0.75}}} (l2)
-			(m2) edge[ draw = black!40!green] node{{\textcolor{black!40!green}{\tiny p=0.75}}}(l3)
 			(h0) edge[ draw = black!40!green] node{{\textcolor{black!40!green}{\tiny p=0.75}}} (m2)
 			(h1) edge[ draw = black!40!green] node{{\textcolor{black!40!green}{\tiny p=0.75}}} (m3);
 			
@@ -1087,13 +1082,7 @@ Deterministic actions
         >=latex,
         draw=red,
         fill=red]
-			(l0) edge[] node{{\textcolor{red}{\tiny p=0.25}}}(l1)
-			(l1) edge[]node{{\textcolor{red}{\tiny p=0.25}}} (l2)	
-			(l2) edge[]node{{\textcolor{red}{\tiny p=0.25}}} (l3)
-			(l3) edge[dashed] node{{\textcolor{red}{\tiny p=0.25}}}(d1)
-			(m0) edge[bend left] node{{\textcolor{red}{\tiny p=0.25}}}(m2)
-			(m1) edge[bend left] node{{\textcolor{red}{\tiny p=0.25}}}(m3)
-			(m2) edge[bend left,dashed]node{{\textcolor{red}{\tiny p=0.25}}} (d2)
+
 			(h0) edge[bend left]node{{\textcolor{red}{\tiny p=0.25}}} (h3)
 			(h1) edge[bend left,dashed] node{{\textcolor{red}{\tiny p=0.25}}}(d3);
     \end{tikzpicture}
@@ -1101,6 +1090,20 @@ Deterministic actions
 
 
 
+\end{frame}
+
+\begin{frame}
+\frametitle{Results for stochastic actions}
+\framesubtitle{state-value function at the end of the iterations
+}
+\centering
+deterministic actions\\
+\vspace{0.1cm}
+\includegraphics[scale=0.12]{img/value6.jpg}\\
+\vspace{0.3cm}
+stochastic actions\\
+\vspace{0.1cm}
+\includegraphics[scale=0.12]{img/state_values_sto.jpg}
 \end{frame}
 
 \begin{frame}
@@ -1122,13 +1125,7 @@ where stable policy is attained
 \end{frame}
 
 
-\begin{frame}
-\frametitle{Results for stochastic actions}
-\framesubtitle{state-value function at the end of the iterations
-}
-\centering
-\includegraphics[scale=0.7]{img/state_values_sto.jpg}
-\end{frame}
+
 
 
 
