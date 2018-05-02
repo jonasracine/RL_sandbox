@@ -25,7 +25,7 @@
 %\setbeamercovered{transparent} 
 \setbeamertemplate{navigation symbols}{} 
 %\logo{} 
-%\institute{} 
+\institute{Supervisors: Prof. F. Eisenbrand, Jonas Racine} 
 \date{May 2, 2018}
 %\subject{} 
 
@@ -51,7 +51,7 @@
 \begin{block}{The problem}
 
   \begin{itemize}
-   \item Framework: a raspberry pie 3 robot which can follow lines
+   \item Framework: a raspberry pi 3 robot which can follow lines
    \item The task: the robot should adapt its speed with respect to traffic lights
    \item How: using Reinforcement Learning (RL) and Markov Decision Process (MDP)  
   \end{itemize}
@@ -297,20 +297,24 @@ $$ \pi_{*} \quad s.t. \quad \forall \pi : \pi_{*}\geq \pi $$
 
 We can associate the value function $v_*$ and $q_*$ to the optimal policy $\pi_{*}$   
 
+
 \begin{block}{}
+\begin{equation*}
+\begin{split}
+q_{*}(s,a) = \sum_{s'}\mathbb{P}(s' \mid s,a)\left[R(s')+\gamma \max_{a'}q_{*}(s',a')\right]
+\end{split}
+\end{equation*}
+\end{block}
+
+\begin{block}{}
+
 
 \begin{equation*}
 v_{*}(s)=\underset{a}{\text{max }} q_{*}(s,a)
 \end{equation*}
 \end{block}
 
-\begin{block}{}
-\begin{equation*}
-\begin{split}
-q_{*}(s,a) = \sum_{s'}\mathbb{P}(s' \mid s,a)[R(s')+\gamma \max_{a'}q_{*}(s',a')]
-\end{split}
-\end{equation*}
-\end{block}
+
 
 %Intuitively these equations say that the value of a state under the optimal policy must equal the expected return for the best action from that state. For finite MDPs these equations have a unique solution.
 \end{frame}
@@ -1094,7 +1098,7 @@ Deterministic actions
 
 \begin{frame}
 \frametitle{Results for stochastic actions}
-\framesubtitle{state-value function at the end of the iterations
+\framesubtitle{optimal state-value function at the end of the iterations
 }
 \centering
 deterministic actions\\
@@ -1103,25 +1107,41 @@ deterministic actions\\
 \vspace{0.3cm}
 stochastic actions\\
 \vspace{0.1cm}
-\includegraphics[scale=0.12]{img/state_values_sto.jpg}
+\includegraphics[scale=0.12]{img/state_values_sto4.jpg}
 \end{frame}
 
 \begin{frame}
 \frametitle{Results for stochastic actions}
 \framesubtitle{decelerating  results in keeping the same speed with probability 1/4}
 \centering
-\includegraphics[scale=0.5]{img/trajectory1.jpg}
+\includegraphics[scale=0.12]{img/state_values_sto1_traj.jpg}
+\begin{block}{}
+\centering
+iteration 1
+\end{block}
 \end{frame}
 
+\begin{frame}
+\frametitle{Results for stochastic actions}
+\framesubtitle{decelerating  results in keeping the same speed with probability 1/4}
+\centering
+\includegraphics[scale=0.12]{img/state_values_sto3_traj.jpg}
+\begin{block}{}
+\centering
+iteration 3 
+\end{block}
+\end{frame}
 
 
 \begin{frame}
 \frametitle{Results for stochastic actions}
-\framesubtitle{decelerating results results in keeping the same speed with probability 1/4}
+\framesubtitle{decelerating results  in keeping the same speed with probability 1/4}
 \centering
-\includegraphics[scale=0.5]{img/trajectory4.jpg}\\
+\includegraphics[scale=0.12]{img/state_values_sto4_traj.jpg}\\
+\begin{block}{}
 \centering
 where stable policy is attained 
+\end{block}
 \end{frame}
 
 
@@ -1158,7 +1178,7 @@ where stable policy is attained
 \begin{block}{In a not so distant future}
 \begin{itemize}
 \item Explore other algorithms and compare them : Monte-Carlo methods, temporal difference learning, Q learning, Expected Sarsa$\ldots$
-\item Neuro-dynamic programming ?
+\item use neural networks ?
 \end{itemize}
 \end{block}
 
@@ -1167,6 +1187,11 @@ where stable policy is attained
 Implement everything on the robot ... \pause and pray that everything works well
 \end{block}
 
+\end{frame}
+
+\begin{frame}{}
+\centering
+\Huge{Thank you !} 
 \end{frame}
 
 

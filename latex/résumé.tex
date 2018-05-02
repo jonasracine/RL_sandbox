@@ -131,7 +131,7 @@ Then we will implement on our robot our different algorithm to compare them and 
 
 
 \tableofcontents
-
+\pagenumbering{gobble}
 \newpage
 \fancyhead[L]{\emph{THEORY}}
 
@@ -157,12 +157,36 @@ Then we will implement on our robot our different algorithm to compare them and 
 
 
 
-
+\pagenumbering{arabic}
 \part*{Theory}
+\section{Reinforcement learning, a short introduction}
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.5]{img/RL_graph.png}
+\label{RL}
+\caption{Graphical representation of the reinforcement learning process from \citep{Sutton}}
+\end{figure}
+
+In the reinforcement learning paradigm of machine learning, our learner is an decision-making agent whose purpose is to maximize a numerical signal in the long term : the sum of the rewards. 
+
+Our agent is connected to the model trough perceptions and actions. The typical procedure is as follows: 
+\begin{itemize}
+\item the environment sends an information to the agent about the state he is actually into
+\item then the agent chooses to do an action, based on the information he just received, the action takes him to another state in the environment
+\item the environment sends back to the agent a reward (numerical signal) for the transition that just happened and also an information about the state the action brought our agent into
+\item and so on $\ldots$
+\end{itemize}
+
+The purpose of our agent is to learn an optimal behavior which should optimize the long-run sum of values of the reinforcement signal (the rewards). \citep{KLMSurvey}
+
+We define an \emph{episode} as being a finite sequence of event perceived by our agent (perception,action,reward,\ldots)
 
 \section{MDP : Markov decision processes}
 
 
+
+The mathematical way to define the reinforcement learning framework is done using Markov decision processes.
 
 Markov's decision processes are a tuple  $\mathcal{M}=\{\mathcal{S},\mathcal{A},T,R,\gamma\}$ : 
 
@@ -590,15 +614,58 @@ But the most important drawback to these methods is that they are model-based, m
 
 \section{model-free approaches and algorithms}
 
+Until now, we assumed implicitly that we knew the model (i.e. the transition function) of our environment all the previous learning algorithm where based on this assumption. Hence we call them \emph{model based}, meaning that you can not apply them if you do not know the model. But in real life applications, we often do not know the whole model, and we have to study other methods in order to do reinforcement learning : this is what gives us the \emph{model free} algorithms. We will discuss shortly some of them in this section.
+
+\subsection{Monte-Carlo methods}
+Monte-Carlo methods use sampling from episodes to estimate the action value function.
+They differ from the dynamic programming methods by the fact that they do not require a knowledge of the model to estimate the action value function of a policy. To improve our policy, we still use the same greedy approach as before, choosing the best actions available in each state.
+Monte-Carlo methods estimate the value function by averaging the sample return from the episodes. Thus they only need sample sequences of state, action, reward from experience or simulation. 
+
+
+ It can be shown to converge as long as all pairs $(s,a)$ with $s$ a state, and $a$ an action are visited an infinite number of time.
+\subsection{Temporal difference methods}
+\textcolor{red}{TO CHANGE:}\\
+Temporal difference methods are a combination of dynamic programming and Monte-Carlo methods : unlike Monte Carlo methods, TD learning methods do not have to wait until an estimate of the return is available (i.e., at the end of an episode) to update the value function. Instead, they use temporal errors and only have to wait until the next time step. The temporal error is the difference between the old estimate and a new estimate of
+the value function, taking into account the reward received in the current sample.
+These updates are done iteratively and, in contrast to dynamic programming
+methods, only take into account the sampled successor states rather than the
+complete distributions over successor states. \citep{Xia2015}
+
+\paragraph{Q-learning} Estimation of the optimal action value function $q_*$:
+
+
+with s' the state resulting from action a :
+\begin{equation}
+Q(s,a) \leftarrow Q(s,a) + \alpha \left( \mathcal{R}(s') + \gamma \max_{a'}Q(s',a') - Q(s,a) \right) 
+\label{eq:ql}
+\end{equation}
+
+\begin{proof} (convergence of Q-learning algorithm)
+We use again the property that a contraction admits a unique fixed point, by showing that our update rule (\ref{eq:ql}) can be written as a contraction.
+
+We define : \textcolor{red}{A FINIR !!!!}
+\end{proof}
+
+
+\paragraph{SARSA} Estimation of the action value function $q_{\pi}$:
+
+with the action $a'$ being chosen following the policy $\pi$:
+\begin{equation}
+Q(s,a) \leftarrow Q(s,a) + \alpha \left( \mathcal{R}(s') + \gamma Q(s',a') - Q(s,a) \right)
+\end{equation}
 \newpage
 \part*{Implementation}
 \fancyhead[L]{\emph{IMPLEMENTATION}}
 We have to determine our states, and hence a way for the robot to find its relative distance to our traffic light.
-\section{States}
-\subsection{Distance to the traffic light}
-\subsection{Speed}
+\section{The robot}
+\section{Modelization}
+\subsection{States}
+\subsection{Actions}
+\subsection{Reward function}
 
-\section{Reward function}
+\section{Simulation of the model}
+
+\section{Results}
 
 
 
