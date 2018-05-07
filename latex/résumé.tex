@@ -13,6 +13,10 @@
 \usetikzlibrary{automata, positioning}
 \usepackage{float}
 \usepackage[round]{natbib}
+\usepackage[hidelinks]{hyperref}
+\usepackage{caption}
+\usepackage{graphicx}
+\usepackage{subcaption}
 %\usepackage[justification=centering]{caption}
 
 
@@ -29,7 +33,6 @@
 \textwidth   6.3in
 \textheight  9.5in
 \topmargin  -0.7in
-
 
 
 \usepackage{fancyhdr}
@@ -168,7 +171,8 @@ Then we will implement on our robot our different algorithm to compare them and 
 \caption{Graphical representation of the reinforcement learning process from \citep{Sutton}}
 \end{figure}
 
-In the reinforcement learning paradigm of machine learning, our learner is an decision-making agent whose purpose is to maximize a numerical signal in the long term : the sum of the rewards. 
+In reinforcement learning problems, a scalar value, which we will call the reward, is received by an agent for transitions to one state to another. The aim of the agent is to maximize the discounted sum of the rewards he will receive, and to do so has to find an appropriate behavior (policy).
+
 
 Our agent is connected to the model trough perceptions and actions. The typical procedure is as follows: 
 \begin{itemize}
@@ -215,7 +219,8 @@ Markov decisions processes can easily be  represented as a directed graph : the 
 
 \begin{figure}[H]
 \centering
-    \begin{tikzpicture}[font=\sffamily]
+\captionsetup{justification=centering,margin=2cm}
+\begin{tikzpicture}[font=\sffamily]
     % Add the states
         \node[state,
               text=yellow,
@@ -258,9 +263,9 @@ Markov decisions processes can easily be  represented as a directed graph : the 
       
     \end{tikzpicture}
     \label{figure : graph_example}
-    \begin{center}
-        \caption{example of a graph representing a Markov Decision process, there are two actions possible from node $0$ which takes to different states with some probability }
-    \end{center}
+    \caption{example of a graph representing a Markov Decision process, there are two actions possible from node $0$ which takes to different states with some probability }
+     \label{figure : graph_example}
+   
 \end{figure}  
 
 
@@ -619,31 +624,29 @@ Until now, we assumed implicitly that we knew the model (i.e. the transition fun
 \subsection{Monte-Carlo methods}
 Monte-Carlo methods use sampling from episodes to estimate the action value function.
 They differ from the dynamic programming methods by the fact that they do not require a knowledge of the model to estimate the action value function of a policy. To improve our policy, we still use the same greedy approach as before, choosing the best actions available in each state.
-Monte-Carlo methods estimate the value function by averaging the sample return from the episodes. Thus they only need sample sequences of state, action, reward from experience or simulation. 
+Monte-Carlo methods estimate the value function by averaging the sample return from the episodes. Thus they only need sample sequences of state, action, reward from experience or simulation. \citep{Sutton}
 
 
  It can be shown to converge as long as all pairs $(s,a)$ with $s$ a state, and $a$ an action are visited an infinite number of time.
 \subsection{Temporal difference methods}
-\textcolor{red}{TO CHANGE:}\\
 Temporal difference methods are a combination of dynamic programming and Monte-Carlo methods : unlike Monte Carlo methods, TD learning methods do not have to wait until an estimate of the return is available (i.e., at the end of an episode) to update the value function. Instead, they use temporal errors and only have to wait until the next time step. The temporal error is the difference between the old estimate and a new estimate of
 the value function, taking into account the reward received in the current sample.
 These updates are done iteratively and, in contrast to dynamic programming
-methods, only take into account the sampled successor states rather than the
-complete distributions over successor states. \citep{Xia2015}
+methods, only take into account the sampled successor states. \citep{Xia2015}
 
 \paragraph{Q-learning} Estimation of the optimal action value function $q_*$:
 
 
-with s' the state resulting from action a :
+with $s'$ the state resulting from action a :
 \begin{equation}
 Q(s,a) \leftarrow Q(s,a) + \alpha \left( \mathcal{R}(s') + \gamma \max_{a'}Q(s',a') - Q(s,a) \right) 
 \label{eq:ql}
 \end{equation}
 
-\begin{proof} (convergence of Q-learning algorithm)
-We use again the property that a contraction admits a unique fixed point, by showing that our update rule (\ref{eq:ql}) can be written as a contraction.
+Where $\alpha$ is the learning factor.
 
-We define : \textcolor{red}{A FINIR !!!!}
+\begin{proof} (convergence of Q-learning algorithm)
+See \citep{Watkins_article}
 \end{proof}
 
 
@@ -653,18 +656,108 @@ with the action $a'$ being chosen following the policy $\pi$:
 \begin{equation}
 Q(s,a) \leftarrow Q(s,a) + \alpha \left( \mathcal{R}(s') + \gamma Q(s',a') - Q(s,a) \right)
 \end{equation}
+
+
+
 \newpage
 \part*{Implementation}
 \fancyhead[L]{\emph{IMPLEMENTATION}}
 We have to determine our states, and hence a way for the robot to find its relative distance to our traffic light.
 \section{The robot}
+The robot is a raspberry pi 3 powered robot with a camera, like in Figure (\ref{fig:sub1}).
+
+\begin{figure}[H]
+\centering
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=.5\linewidth]{img/robot.png}
+  \caption{The raspberry pi 3 powered robot with one camera}
+  \label{fig:sub1}
+\end{subfigure}%
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=.5\linewidth]{img/setting1_mod1.png}
+  \caption{The setting}
+  \label{fig:sub2}
+\end{subfigure}
+\caption{The Framework of our runs}
+\label{fig:test}
+\end{figure}
+
+
+
+\section{The task}
+The robot can already follow lines from previous projects on it, and we want to learn how to respect a traffic light using reinforcement learning. 
+
 \section{Modelization}
+
 \subsection{States}
+The states are modeled in the following way : in one state we have to have the information about the distance to the traffic light if there is one, the color of the traffic light and the actual speed of the robot.
+
+One can represent the states in the following way : we have a graph like the one in Figure  (\ref{figure : graph_example}) for each speed, for example in Figure~(\ref{figure : graph_ex}). Then we add as a second layer the information about the traffic light color.
+\begin{figure}[H]
+\begin{center}
+    \begin{tikzpicture}[font=\sffamily]
+    % Add the states
+        \node[state,text=black] (d0) {d0};    
+        \node[state,right = 1cm of d0,text=black] (d1) {d1};
+        \node[state,right = 1cm of d1,text=black] (d2) {d2};
+        \node[state,right = 1cm of d2,text=black,draw=none] (d3) {};       
+              
+        % Connect the states with arrows
+        \draw[every loop,auto=right,>=latex,draw=black,fill=black]
+        	(d0) edge[] (d1)
+        	(d1) edge[] (d2)
+        	(d2) edge[dashed] (d3)
+            ;
+    \end{tikzpicture}
+\end{center}
+    \caption{Exemple of a transition graph for a certain speed}
+    \label{figure : graph_ex}
+
+\end{figure}
+
+
+The robot can go from speed $20$ to spedd $100$  and we decided to consider the speeds $20,25,30,25,\ldots$ for simplicity.
+
+The distance to the traffic light is computed in the following way. The traffic light is actually a phone, which accesses the website \url{http://light.grathink.com}. The robot perceives images as the image~(\ref{vue_robot}) and the algorithm for the image processing is algo (\ref{detection_image}).
+
+\begin{figure}
+\centering
+\captionsetup{justification=centering,margin=2cm}
+\includegraphics[scale=0.7]{img/vue10.png}
+\caption{View from the robot's camera in our setting (the image is seen like this, rotating it would be computationally costly); in green is the point from where the distance is computed, the lines are the area of the search of the robot and in yellow are the point use to detect the presence of the traffic light}
+\label{vue_robot}
+\end{figure}
+
+
+
+\begin{algorithm}
+	\SetKwInOut{Input}{Input}
+    \SetKwInOut{Output}{Output}
+    
+	\Input{an image from the camera feed of the robot}
+	\Output{distance, color of the traffic light}
+	
+	Scan the searching area for bright white pixels\\
+	Find the middle of the zone of the white pixels\\
+    From there go down to the bottom of the traffic light (end is detected as a value in all the RGB channel big enough)\\
+    distance = the number of pixels from the top of the image to the bottom of the traffic light\\
+    color is determined from the intensity of the different RGB channel
+	\caption{Image processing}
+	\label{detection_image}
+\end{algorithm}
+
+Now our robot has a way to perceives in which state he is. What action can he take ? 
+
+
 \subsection{Actions}
+The action we are interested in do not concern the direction, which is imposed from the line on the ground as we can see from Figure (\ref{fig:sub2}). Hence we are only interested in accelerating or slowing down. The possible actions are to go from one speed to any other speed (can be easily done through the already coded functions on the robot).
 \subsection{Reward function}
 
 \section{Simulation of the model}
 
+One can apply Q-learning on a modelization of the problem : we do not have to have the robot running around into walls and whatever to learn; if we can have a modelization of our problem, we could run everything in a simulated world and after that actually transfer the results to the robot directly.
 \section{Results}
 
 
@@ -682,9 +775,7 @@ We have to determine our states, and hence a way for the robot to find its relat
 
 
 
-
-
-
+\nocite{Watkins_phd}
 \newpage
 \fancyhead[L]{\emph{BIBLIOGRAPHY}}
 
@@ -695,17 +786,3 @@ We have to determine our states, and hence a way for the robot to find its relat
 
 
 \end{document}
-
-
-%\paragraph{The Bellman equation}
-%\begin{equation}
-%v_{\pi}(s)=R(s)+\gamma \sum_{s \in \mathcal{S}} P(s' \mid s,\pi(s))v_{\pi}(s')
-%\label{bellman1}
-%\end{equation}
-%
-%\begin{equation}
-%v_{\pi}(s)=\sum_{a}\pi(a\mid s)\sum_{s',r}p(s',r \mid s,a)[r+\gamma v_{\pi}(s')]
-%\label{bellman2}
-%\end{equation}
-%
-%These are two formulations of the bellman equation used to compute optimal policies by iteration : \eqref{bellman1} is from the MOOC and \eqref{bellman2} is from Sutton's book \cite{Sutton}
