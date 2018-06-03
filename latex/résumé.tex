@@ -17,6 +17,8 @@
 \usepackage{caption}
 \usepackage{graphicx}
 \usepackage{subcaption}
+\usepackage{listings}
+\usepackage{color}
 %\usepackage[justification=centering]{caption}
 
 
@@ -26,6 +28,35 @@
 \theoremstyle{definition}
 \newtheorem{madef}{Definition}
 \newtheorem{prop}{Proposition}
+
+
+ 
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+ 
+\lstset{style=mystyle}
+
 
 
 \oddsidemargin  0in
@@ -84,8 +115,8 @@ Charles Dufour
 \begin{minipage}{0.4\textwidth}
 \begin{flushright} \large
 \emph{Supervisors:} \\
-Jonas Racine\\% Supervisor's Name
-Prof. Friedrich Eisenbrand 
+Prof. Friedrich Eisenbrand \\% Supervisor's Name
+Jonas Racine
 \end{flushright}
 \end{minipage}\\[5cm]
 
@@ -122,11 +153,7 @@ Prof. Friedrich Eisenbrand
 
 \begin{abstract}
 
-This dissertation focuses on the intelligent robot control in autonomous navigation using reinforcement learning. More precisely, the purpose of this bachelor project is to make a robot adapt its behavior based on traffic light using reinforcement learning. Reinforcement learning is a machine learning paradigm in which the agent tries to maximize a numerical reward signal (the reward function) in the long run and has only partial feed-back from the environment (in opposition with supervised learning where the feed-back is complete and unsupervised learning where there is no feed-back) : indeed the agent is not told which action to take but must discover it by trying the actions and see which one yields the best reward.
-
-To make things a little bit more formal, we will introduce Markov Decision Processes (MDP), and then consider model-based and model-free algorithm to solve the problem of learning from partial feedback of the environment. 
-
-Then we will implement on our robot our different algorithm to compare them and then discuss about further work. This project is the successor of many projects on the robot in  DISOPT. 
+This dissertation focuses on the intelligent robot control in autonomous navigation using reinforcement learning. More precisely, the purpose of this bachelor project is to make a raspberry pie 3 powered robot adapt its behavior based on traffic light using reinforcement learning, and more precisely Q-learning.We will first discuss about the theory, then we will implement the Q-learning on our robot, consider the results and then discuss about further work. This project is the successor of many projects on the robot in  DISOPT. 
 
 \nocite{Xia2015}
 \nocite{KLMSurvey}
@@ -178,15 +205,15 @@ Our agent is connected to the model trough perceptions and actions. The typical 
 \begin{itemize}
 \item the environment sends an information to the agent about the state he is actually into
 \item then the agent chooses to do an action, based on the information he just received, the action takes him to another state in the environment
-\item the environment sends back to the agent a reward (numerical signal) for the transition that just happened and also an information about the state the action brought our agent into
+\item the environment sends back to the agent a reward (numerical signal, a single number) for the transition that just happened and also an information about the state the action brought our agent into
 \item and so on $\ldots$
 \end{itemize}
 
 The purpose of our agent is to learn an optimal behavior which should optimize the long-run sum of values of the reinforcement signal (the rewards). \citep{KLMSurvey}
 
-We define an \emph{episode} as being a finite sequence of event perceived by our agent (perception,action,reward,\ldots)
+We define an \emph{episode} as being a finite sequence of event perceived by our agent (perception,action,reward,\ldots) The last state of an episode, the one that defines when it ends is called an \emph{absorbing state}.
 
-\section{MDP : Markov decision processes}
+\section{MDP : Markov decision processes} \label{def_MDP}
 
 
 
@@ -262,7 +289,6 @@ Markov decisions processes can easily be  represented as a directed graph : the 
             ;       
       
     \end{tikzpicture}
-    \label{figure : graph_example}
     \caption{example of a graph representing a Markov Decision process, there are two actions possible from node $0$ which takes to different states with some probability }
      \label{figure : graph_example}
    
@@ -274,7 +300,7 @@ Markov decisions processes can easily be  represented as a directed graph : the 
 \section{Policies and Value functions}
 
 A policy : $\pi $ is a stochastic mapping from states to action: $$ \pi : \mathcal{A} \times \mathcal{S} \mapsto [0,1] \quad \text{s.t. } \sum_{a}\pi(a\mid s)=1 \quad \forall s \in \mathcal{S}$$
-A policy is a formalisation of the decision making process : in each state, we follow the policy to decide which action to choose with some probability: $\pi(a\mid s) $ is the probability that $A_{t+1}=a$ if $S_t=s$.Hence maximizing the reward means finding a good policy.
+A policy is a formalization of the decision making process : in each state, we follow the policy to decide which action to choose with some probability: $\pi(a\mid s) $ is the probability that $A_{t+1}=a$ if $S_t=s$. Hence maximizing the reward means finding a good policy.
 
 
 We need to quantify the reward the agent has to maximize, so we define the return as : 
@@ -378,8 +404,7 @@ For finite MDPs these equations have a unique solution. We can note that if we k
 
 \section{Solving MDPs with dynamic programming}
 
-In general we don't have all the information we need to compute the exact value of $v_{*}$ or even if we have them, we don't have the computational 
-power needed. We often use approximation of value-function instead.
+In general we don't have all the information we need to compute the exact value of $v_{*}$ or even if we have them, we don't have the computational power needed. We often use approximation of value-function instead. In order to explore all the possible states, we choose the actions in an $\epsilon$-greedy manner: when we follow the policy $\pi$, with probability $\epsilon$ we will choose an action at random and with probability $1-\epsilon$ we will follow the policy. This allows us to find a solution of the exploration-exploitation problem (you need to improve the estimate you already have on the values, but also by exploring (trying new actions) you will find a better solution: see \citep{Sutton} chapter $2$ for more).
 
 
 From now on we assume our MDPs are finite, even if it is possible to extend everything to infinite MDPs if we are careful enough to avoid the problematic ones. \citep{Sutton}
@@ -402,7 +427,7 @@ From this we derive the algorithm \ref{algo1}.
 
 
 \begin{algorithm}
-\label{algo1}
+
     \SetKwInOut{Input}{Input}
     \SetKwInOut{Output}{Output}
 
@@ -421,6 +446,7 @@ From this we derive the algorithm \ref{algo1}.
        	\Return{$V \approx v_{\pi}$}
     
     \caption{Iterative policy evaluation (in place)}
+    \label{algo1}
 \end{algorithm}
 
 
@@ -440,7 +466,6 @@ $$
 $$
 
 \begin{algorithm}
-\label{algo2}
     \SetKwInOut{Input}{Input}
     \SetKwInOut{Output}{Output}
 
@@ -453,16 +478,20 @@ $$
        	\Return{$\pi'$}
     
     \caption{Policy improvement}
+    \label{algo2}
+
 \end{algorithm}
 
 
 
-\paragraph{Policy Iteration} By combining the two processes described before, we can derive an algorithm to sweep through all our states and upgrade our policy until the changes between each sweep is too small : it is controlled by a parameter $\epsilon$ and a parameter $\gamma$ (which we talked about previously).This is the algorithm \ref{algo3} which can be represented graphically by figure (\ref{fig:Sutton})
+\paragraph{Policy Iteration} By combining the two processes described before, we can derive an algorithm to sweep through all our states and upgrade our policy until the changes between each sweep is too small : it is controlled by a parameter $\epsilon$ and a parameter $\gamma$ (which we talked about previously).This is the algorithm \ref{algo3} which can be represented graphically by Figure (\ref{fig:Sutton})
 
 
 
 \begin{figure}[ht]
 \centering
+\captionsetup{justification=centering,margin=2cm}
+
 \includegraphics[scale=0.7]{img/policy_iter_sutton.PNG}
 \caption{Graphical representation of the interactions between policy improvement and policy evaluation(from \citep{Sutton})}
 \label{fig:Sutton}
@@ -634,7 +663,7 @@ the value function, taking into account the reward received in the current sampl
 These updates are done iteratively and, in contrast to dynamic programming
 methods, only take into account the sampled successor states. \citep{Xia2015}
 
-\paragraph{Q-learning} Estimation of the optimal action value function $q_*$:
+\paragraph{Q-learning} Estimation of the optimal action value function $q_*$ given in Equation (\ref{bellman_opt_q}):
 
 
 with $s'$ the state resulting from action a :
@@ -643,10 +672,37 @@ Q(s,a) \leftarrow Q(s,a) + \alpha \left( \mathcal{R}(s') + \gamma \max_{a'}Q(s',
 \label{eq:ql}
 \end{equation}
 
-Where $\alpha$ is the learning factor.
+Where $\alpha$ is the learning factor. The actions are chosen so that we balance the exploration exploitation issue (random, greedy in the limit (GLIE),\ldots). Episode in algorithm \ref{Ql:algo} is a list of episodes, one episode $\mathcal{E}$ being a finite successions of transitions  $<s,a,r,s'>$
+
+\begin{algorithm}
+	\SetKwInOut{Input}{Input}
+    \SetKwInOut{Output}{Output}
+    
+	\Input{Q initialized at $0$, learning rate $\alpha$, discount factor $gamma$, exploration parameter $\epsilon$, Episodes}
+	\Output{estimation of the optimal value function $Q$ and optimal policy $\pi$}
+	
+	Approximation of the value function
+	    \For{$\mathcal{E}$ in Episodes}{
+    		\For{ $<s,a,r,s'>\quad \in \mathcal{E}$}{
+    	 $Q(s,a) \leftarrow Q(s,a) + \alpha \left( \mathcal{R}(s') + \gamma \max_{a'}Q(s',a') - Q(s,a) \right)$
+    	 }
+       	}
+     
+     Policy  : \\
+     \For{$s \in \mathcal{S}$}{
+     	$\pi(s)=\underset{a \in A}{\text{argmax}} ~Q(s,a)$\\
+     }
+     
+	\caption{Q-learning algorithm}
+	\label{Ql:algo}
+\end{algorithm}
 
 \begin{proof} (convergence of Q-learning algorithm)
+
+As long as each pairs $(s,a)$ are visited infinitely many often, that $s'\sim T(s,a,s')$, $r \sim \mathcal{R}(s')$ and  $\underset{n \in \mathbb{N}}{\sum} \alpha = \infty$, $\underset{n \in \mathbb{N}}{\sum} \alpha^2 < \infty$, the Q-learning algorithm \ref{Ql:algo} converges.
+
 See \citep{Watkins_article}
+
 \end{proof}
 
 
@@ -658,13 +714,16 @@ Q(s,a) \leftarrow Q(s,a) + \alpha \left( \mathcal{R}(s') + \gamma Q(s',a') - Q(s
 \end{equation}
 
 
+In this project the purpose is to implement Q-learning.
+
+
 
 \newpage
 \part*{Implementation}
 \fancyhead[L]{\emph{IMPLEMENTATION}}
 We have to determine our states, and hence a way for the robot to find its relative distance to our traffic light.
 \section{The robot}
-The robot is a raspberry pi 3 powered robot with a camera, like in Figure (\ref{fig:sub1}).
+The robot is a raspberry pi 3 powered robot with a camera, like in Figure (\ref{fig:sub1}), and it follows a black line on the floor. On the right of this line, we put our \emph{traffic light}, which is as one can see in Figure \ref{vue_robot}: the position of the activated region of the traffic light indicates the color: down is green, \ldots
 
 \begin{figure}[H]
 \centering
@@ -687,14 +746,14 @@ The robot is a raspberry pi 3 powered robot with a camera, like in Figure (\ref{
 
 
 \section{The task}
-The robot can already follow lines from previous projects on it, and we want to learn how to respect a traffic light using reinforcement learning. 
+The robot can already follow lines from previous projects on it, and we want to learn how to respect a traffic light using reinforcement learning. In this project the robot is only allowed to go forward or to stop, but cannot go backwards.
 
 \section{Modelization}
 
 \subsection{States}
-The states are modeled in the following way : in one state we have to have the information about the distance to the traffic light if there is one, the color of the traffic light and the actual speed of the robot.
+The states are modeled in the following way : in one state we have to have the information about the distance to the traffic light if there is one, the color of the traffic light and the actual speed of the robot, along with the action that brought our agent into this state and the time spent in the color of the traffic light. Indeed, as the first informations (distance, speed, color of the traffic light) seem intuitive, we need the time spent in the color of the traffic light since it helps predict the behavior of the traffic light and then adapt our behavior to the traffic light : if we are driving a car and the traffic light is orange, depending for how long it has been in this state, we may speed up in order to pass before it turns to red. So we wanted to allow for this possible adaptation from the learner; for the action that brought us in the state, this is done in order to control the smoothness of the driving : in the reward function (see \ref{reward function}), we will be able to impose negative reward if the driving is too chaotic.
 
-One can represent the states in the following way : we have a graph like the one in Figure  (\ref{figure : graph_example}) for each speed, for example in Figure~(\ref{figure : graph_ex}). Then we add as a second layer the information about the traffic light color.
+One can represent the states in the following way : we have a graph like the one in Figure  (\ref{figure : graph_example}) for each speed, for example in Figure~(\ref{figure : graph_ex}). Then we add as a second layer the information about the traffic light color, then a next one for the time spent in the color, and finally one for the action that brought the agent in this position.
 \begin{figure}[H]
 \begin{center}
     \begin{tikzpicture}[font=\sffamily]
@@ -718,19 +777,85 @@ One can represent the states in the following way : we have a graph like the one
 \end{figure}
 
 
-The robot can go from speed $20$ to spedd $100$  and we decided to consider the speeds $20,25,30,25,\ldots$ for simplicity.
+The robot can go from speed $20$ to speed $100$  and we decided to consider the speeds $0,20,30,30,40,\ldots, 70$ for simplicity and we stopped at $70$ since if the robot goes faster, it has trouble following the line, and the distance detection becomes not reliable as Figure \ref{fig:mean and std of net44} shows.
 
-The distance to the traffic light is computed in the following way. The traffic light is actually a phone, which accesses the website \url{http://light.grathink.com}. The robot perceives images as the image~(\ref{vue_robot}) and the algorithm for the image processing is algo (\ref{detection_image}).
 
-\begin{figure}
-\centering
-\captionsetup{justification=centering,margin=2cm}
-\includegraphics[scale=0.7]{img/vue10.png}
-\caption{View from the robot's camera in our setting (the image is seen like this, rotating it would be computationally costly); in green is the point from where the distance is computed, the lines are the area of the search of the robot and in yellow are the point use to detect the presence of the traffic light}
-\label{vue_robot}
+The distance to the traffic light is computed in the following way. The traffic light is actually a phone, which accesses the website \url{http://light.grathink.com}. The robot perceives images as the image~(\ref{vue_robot}) and the algorithm for the image processing is algo (\ref{detection_image}). The distance is computed as the distance of the reference point in pixels.
+
+\begin{figure}[h]
+        \centering
+        \captionsetup{justification=centering,margin=2cm}
+
+        \begin{subfigure}[b]{0.49\textwidth}
+            \centering
+            \includegraphics[width=\textwidth]{img/vue7.png}   
+            \label{fig:mean and std of net14}
+        \end{subfigure}
+        \begin{subfigure}[b]{0.49\textwidth}  
+            \centering 
+            \includegraphics[width=\textwidth]{img/vue10.png}
+            \label{fig:mean and std of net24}
+        \end{subfigure}
+        \vskip\baselineskip
+        
+        \begin{subfigure}[b]{0.49\textwidth}   
+            \centering 
+            \includegraphics[width=\textwidth]{img/vue46.png}
+   
+            \label{fig:mean and std of net34}
+        \end{subfigure}
+        \begin{subfigure}[b]{0.49\textwidth}   
+            \centering 
+            \includegraphics[width=\textwidth]{img/vue51.png}
+  
+            \label{fig:mean and std of net44}
+        \end{subfigure}
+        \caption{{\small View from the robot's camera in our setting}}
+	\label{vue_robot}
 \end{figure}
 
 
+
+
+
+
+
+\begin{figure}[h]
+        \centering
+        \begin{subfigure}[b]{0.475\textwidth}
+            \centering
+            \includegraphics[width=\textwidth]{img/dist30.png}
+            \caption[Speed 30]%
+            {{\small Speed 30}}    
+            \label{fig:mean and std of net14}
+        \end{subfigure}
+        \hfill
+        \begin{subfigure}[b]{0.475\textwidth}  
+            \centering 
+            \includegraphics[width=\textwidth]{img/dist50.png}
+            \caption[]%
+            {{\small Speed 50}}
+            \label{fig:mean and std of net24}
+        \end{subfigure}
+        \vskip\baselineskip
+        \begin{subfigure}[b]{0.475\textwidth}   
+            \centering 
+            \includegraphics[width=\textwidth]{img/dist70.png}
+            \caption[]%
+            {{\small Speed 70}}    
+            \label{fig:mean and std of net34}
+        \end{subfigure}
+        \quad
+        \begin{subfigure}[b]{0.475\textwidth}   
+            \centering 
+            \includegraphics[width=\textwidth]{img/dist100.png}
+            \caption[]%
+            {{\small Speed 100}}    
+            \label{fig:mean and std of net44}
+        \end{subfigure}
+        \caption{{\small Evolution of the perceived distance at different speed}}
+	\label{distance_plots}
+\end{figure}
 
 \begin{algorithm}
 	\SetKwInOut{Input}{Input}
@@ -748,23 +873,162 @@ The distance to the traffic light is computed in the following way. The traffic 
 	\label{detection_image}
 \end{algorithm}
 
-Now our robot has a way to perceives in which state he is. What action can he take ? 
+Now our robot has a way to perceives in which state he is. What actions can he take ? 
 
 
 \subsection{Actions}
-The action we are interested in do not concern the direction, which is imposed from the line on the ground as we can see from Figure (\ref{fig:sub2}). Hence we are only interested in accelerating or slowing down. The possible actions are to go from one speed to any other speed (can be easily done through the already coded functions on the robot).
-\subsection{Reward function}
+The action we are interested in do not concern the direction, which is imposed from the line on the ground as we can see from Figure (\ref{fig:sub2}). Hence we are only interested in accelerating or slowing down. The possible actions are to go from one speed to the closest speed (can be easily done through the already coded functions on the robot), i.e. going from $40$ to $50$ or to $30$. This is in order to simulate smooth driving.
+
+\subsection{Reward function} \label{reward function}
+
+The reward function is defined so that the robot would go forward toward the traffic light, but adapts its speed with respect to the traffic light. In order to do that, we define all the states in which the position is after the traffic light as absorbing state: we do not consider how to behave once we have passed the traffic light or what to do when there is none, this can be easily coded and is not the purpose of this project.
+
+The reward function used here is the one given by $\mathcal{R}(s,a)$, which means it takes into account the action we just did.
+
+In order to define the reward function, we have to take a look at the behavior we want to make the robot learn: 
+\begin{itemize}
+\item If the robot plows through a red light, it should get a negative reward, but if it does it should get a positive one.
+\item If the robot stops when the traffic light is not red, it should get a negative reward and a positive for the opposite action.
+\item If the actions following one another are inconsistent with each other (hits the break then goes full speed for example), we will give a negative reward whatever the position, as long as it is not an absorbing position. This is why we use the form of the reward function given before.
+\end{itemize}
+
+The reward function is actually really sensitive: if the relative importance of the rewards given for a certain transitions is slightly changed, this can completely modify the behavior of the agent.
+
+
+
+
+The precise parameters of the reward function where given by the results from experience, the one we used can be seen in the appendix \ref{code}.
 
 \section{Simulation of the model}
 
-One can apply Q-learning on a modelization of the problem : we do not have to have the robot running around into walls and whatever to learn; if we can have a modelization of our problem, we could run everything in a simulated world and after that actually transfer the results to the robot directly.
-\section{Results}
+One can apply Q-learning on a modelization of the problem : we do not have to have the robot running around into walls and whatever to learn; if we can have a simulation of our problem, we could run everything in a simulated world and after that actually transfer the results to the robot directly.
+
+In order to do that, we had to actually simulate the environment of the robot, i.e. the transition function in the definition of Markov decision processes (see Section (\ref{def_MDP})).
+
+
+We decomposed the simulation in multiple parts: 
+\begin{itemize}
+\item at a given speed we needed to know the evolution of our newly defined distance. This gave data as can be seen in Figure \ref{distance_plots}, the framework is described in Appendix \ref{pictures}. But even with a lot of data sampling, we were not able to completely define the transitions, some portions were still missing. In order to solve this issue, we used an imputation process like \emph{hot deck}: when a datum was missing, it was imputed using information from the nearest data (if in a certain position there were no data, we used the information given by positions close to this one, computed a median of the data from these distances and then imputed it with a little noise).
+
+ We then computed probability of transition from one position to another while being at a certain speed.
+\item we need to know the transitions of the color of the traffic light. In order to do that we measured what was the speed of the image processing, in order to know how many images the robot processes in average in one second. From these data, we coded a traffic light that simulated a real one with the following time (in seconds): green $5$, orange $2$, red $3$, orange $2$, \ldots
+\item the transitions between speeds are supposed deterministic, we do not account for any problems in the connection of the pins of the robot. But one can note that the transitions are in such way that if you decide to slow down while already in the lowest speed, you just stay in low speed, and the same phenomena happens while accelerating in the highest possible speed.
+\end{itemize}
+
+Then, having a simulation of our model, we are able to make our robot learn on it.
 
 
 
+\section{Q-learning implementation}
+
+
+We apply the Q-learning algorithm described in Equation (\ref{eq:ql}), with parameters $\alpha = 0.1$ and $\gamma = 0.9$. The $\epsilon$ parameter for balancing exploration and exploitation is decreasing from $0.1$ to $0$ linearly as we learn (decayed $\epsilon$ or greedy in the limit (GLIE)). We learn over $5$ millions of episodes, one episode consisting on starting in front of a traffic light and stopping when we went passed a certain stopping distance from the traffic light (distance is linked to the fact that passed a certain point the camera of the robot does not see the light anymore).
+
+
+\begin{figure}[h]
+\centering
+\captionsetup{justification=centering,margin=2cm}
+\includegraphics[scale=0.6]{img/Q_learning_curve.png}
+\caption{learning curve of the Q-learning algorithm \ref{Ql:algo} applied to our problem, $1$ million iterations}
+\label{curve}
+\end{figure}
+
+We can verify how well the robot learns by visualizing the trajectory it would do: in Figure (\ref{trajectories}), we have the distance from the traffic light in the x axis , and on the y axis we have the speed. On the bottom of the graph we have the color the traffic light has during the run (the yellow color is representing the orange that comes after the red in the traffic light sequence): if there is a "pile" of points, it means the traffic light changed multiple times during the moment the robot was on this position. The robot is set to have a beginning distance of $200$ for data management purpose, so we can identify the beginning of a new episode from an error in the distance computation; that is why at the beginning of the trajectories there is this strange behavior of going from $200$ to about $125$ in a single shot.
+
+From Figure \ref{trajectories} and Figure \ref{failure} in Annexe \ref{GRAPHS}, the simulation gives a non zero probability of staying in the same distance to the traffic light in non negative speed: this is due to the fact that there are imprecisions in the way we compute the distance to the traffic light. Then we can see that in Figure \ref{trajectories}, on the top right the robot actually stops, wait for the traffic light to turn orange and then speed up, exactly the behavior we wanted it to have. On the other hand, as one can see in Figure \ref{failure}, there is some cases where the robot fails and goes right pass a red light.
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.4]{img/traj1.png}
+\caption{Graphical representation of  policies obtained from Q-learning with $100$ thousands  iterations}
+\label{trajectories}
+\end{figure}
 
 
 
+\section{Conclusion}
+
+We started this project with a robot that can already follow lines, and we used the technique implemented using support vector machine. The purpose of this bachelor project was to use Markov decision processes in the reinforcement learning framework, so in order to do that we choose to tackle the task to adapt the speed of the robot with respect to the traffic light.
+
+We first had to implement an efficient algorithm to detect the traffic light in order to measure a distance we had to define from the traffic light and in order to see what color was the signalization in. We did so using \texttt{OpenCV}, this was the first big challenge we encountered.
+
+Then we had to create a simulation of the environment, in order to be able to actually apply reinforcement learning in the form of Q-learning. In order to do so we had to run multiple times the robot to get data directly from it, manage the data we collected and then extrapolate from them.
+
+Then while doing the learning we had to try and improve the reward function, which is the backbone of reinforcement learning: trough trial and error we finally found one acceptable, but there is room for more improvement, by doing a systematic comparisons of the policy obtained from different reward function and improving it that way for example.\\
+
+
+
+What could be interesting to do next is to add another raspberry pie to the robot and use two cameras: a perception of depth would give much more accurate distance from the traffic light, and having more computational power would mean being able to do deep-learning to detect in a more general way traffic light, so we will not have to restrict ourselves to the traffic light we used.
+
+
+
+\newpage
+\part*{Appendix}
+\fancyhead[L]{\emph{APPENDIX}}
+\appendix
+\section{Pictures} \label{pictures}
+
+\begin{figure}[h]
+\centering
+\captionsetup{justification=centering,margin=2cm}
+\includegraphics[scale=0.6]{img/Q_learning_curve_random_light.png}
+\caption{learning curve of the Q-learning algorithm \ref{Ql:algo} applied to our problem, $100$ thousands iterations, but with changing light every $30$ thousands iterations: we can see the drop in the performance at iteration $90$ thousands}
+\label{curve_random}
+\end{figure}
+
+
+\section{Graphs} \label{GRAPHS}
+
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.4]{img/traj3.png}
+\caption{Graphical representation of  policies obtained from Q-learning with $100$ thousands  iterations}
+\label{failure}
+\end{figure}
+
+
+\section{Code} \label{code}
+
+All the code can be found in the following git:
+
+ \url{https://github.com/dufourc1/reinforcement-learning-and-autonomous-robot-navigation.git}
+
+%\lstlistoflistings
+%\vspace{1cm}
+
+
+%\begin{lstlisting}[language=Python, caption=Reward Function used in this project]
+%def reward(self,action):
+%        stopping_distance = self.stop
+%        r = 0
+%        if self.position > stopping_distance:
+%            r = -1
+%            if self.last_action == 0 and action == 2 :
+%                r = - 30
+%            elif self.last_action == 2 and action == 0:
+%                r = - 30
+%        if self.position <= stopping_distance :
+%            self.ended = True
+%            if self.current_color == "red":
+%                if self.speed == 20 :
+%                    r = + 120
+%                else :
+%                    r = - 200
+%            elif self.current_color == "green":
+%                if self.speed == 20 :
+%                    r = - 120
+%                else : 
+%                        r = + 120
+%            else :
+%                if self.speed != 20:
+%                    r = + 120
+%                else :
+%                    r = - 120
+%
+%        self.cumulative_reward += r
+%        return r
+%\end{lstlisting}
 
 
 
