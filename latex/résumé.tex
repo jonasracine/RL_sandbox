@@ -186,7 +186,7 @@ The purpose of this project is to apply reinforcement learning on the Raspberry 
 The task was to make the robot adapt its behavior when facing a traffic light using the camera to detect the traffic light. We choose to use the technique using SVM to follow the line on the ground because even if it is one of the two techniques using the camera to follow the line (SVM, neural networks), it proved to be sufficiently smooth and reliable while light computationally speaking, in opposition to the neural network which was quite heavy and the PID which was not so smooth.\\
 
 
-In this project we will first talk about the theory behind reinforcement learning in Part \ref{Theory}. Markov decision process, optimal policies and methods to compute them will be discussed in this part, and especially in Section \ref{TD}, we will talk about Q-learning algorithms. 
+In this project we will first talk about the theory behind reinforcement learning in Part \ref{Theory}. Markov decision process, optimal policies and methods to compute them will be discussed in this part, and especially in Section \ref{TD}, we will talk about Q-learning algorithms.  The part before the Q-learning is necessary to understand why Q-learning algorithm works this way.
 
 Then in Part \ref{Implementation}, we will talk about the implementation on the robot. We describe the modelization of our problem, and the difficulties we encountered.  We first try to use deep-learning to detect the traffic light with the camera, but it happens to be too slow for our robot: only one image per second was analyzed and we need more or less 10 per second so that the robot can follow the line. Hence we developed a home-made algorithm to detect the traffic light which is described in Subsection \ref{detection}. Then to efficiently learn, we had to learn through simulation and Section \ref{simulation} describe that. \\
 
@@ -657,16 +657,16 @@ There exists some others dynamic programming algorithm to solve these problems:
 \item General Policy Iteration (GPI): they are mixing the two components of policy iteration (evaluation and improvement) a little bit more than the algorithm we already saw.
 \end{itemize}
 
-The most important drawback to these methods is that they are model-based, meaning that we need to have a complete knowledge of the model to implement those.
+The most important drawback to these methods is that they are model-based, meaning that we need to have a complete knowledge of the model (the transition function) to implement those.
 
 \section{Model-free approaches and algorithms}
 
-Until now, we assumed implicitly that we knew the model (i.e. the transition function) of our environment and all the previous learning algorithms were based on this assumption. Hence we call them \emph{model-based},and we can not apply them without knowing the model. But in real life applications, we often do not know the whole model, and we have to study other methods in order to do reinforcement learning,which we call \emph{model-free} algorithms. We will discuss shortly some of them in this section.
+Until now, we assumed implicitly that we knew the model (i.e. the transition function) of our environment and all the previous learning algorithms were based on this assumption. Hence we call them \emph{model-based},and we can not apply them without knowing the model. But in real life applications, we often do not know the whole model, and we have to study other methods in order to do reinforcement learning,which we call \emph{model-free} algorithms. We will discuss shortly some of them in this section, then introduce Q-learning algorithms and then proceed to the implementation part.
 
 
 \subsection{exploration exploitation dilemma}
 
-When the agent learn from experience, it has to choose actions, then execute them and look at the reward from the environment in order to approximate the value functions (in Q-learning for example, we will try to approximate $q_\pi(s,a)$). To choose the actions, the agent has two choices:
+When the agent learn from experience, as when using model-free algorithm, it has to choose actions, then execute them and look at the reward from the environment in order to approximate the value functions (in Q-learning for example, we will try to approximate $q_\pi(s,a)$). To choose the actions, the agent has two choices:
 \begin{itemize}
 \item choose an action which is known already has having a good action value and improve this approximation. This is called exploitation.
 \item try another action so maybe the agent will discover a better way to do its task. This is called exploration. 
