@@ -664,7 +664,7 @@ The most important drawback to these methods is that they are model-based, meani
 Until now, we assumed implicitly that we knew the model (i.e. the transition function) of our environment and all the previous learning algorithms were based on this assumption. Hence we call them \emph{model-based},and we can not apply them without knowing the model. But in real life applications, we often do not know the whole model, and we have to study other methods in order to do reinforcement learning,which we call \emph{model-free} algorithms. We will discuss shortly some of them in this section, then introduce Q-learning algorithms and then proceed to the implementation part.
 
 
-\subsection{exploration exploitation dilemma}
+\subsection{Exploration exploitation dilemma}
 
 When the agent learn from experience, as when using model-free algorithm, it has to choose actions, then execute them and look at the reward from the environment in order to approximate the value functions (in Q-learning for example, we will try to approximate $q_\pi(s,a)$). To choose the actions, the agent has two choices:
 \begin{itemize}
@@ -1090,8 +1090,8 @@ We apply the Q-learning algorithm described in Equation (\ref{eq:ql}), with para
 
 \begin{figure}[h]
 \centering
-\captionsetup{justification=centering,margin=2cm}
-\includegraphics[scale=0.6]{img/Q_learning_10m.png}
+\captionsetup{justification=centering}
+\includegraphics[scale=0.6]{img/Q-learning-curve.png}
 \caption{learning curve of the Q-learning algorithm \ref{Ql:algo} applied to our problem, $10$ million iterations}
 \label{curve}
 \end{figure}
@@ -1100,10 +1100,12 @@ We can verify how well the robot learns by visualizing the trajectory it would d
 
 From Figure \ref{trajectories} and Figure \ref{failure} in Annexe \ref{GRAPHS}, the simulation gives a non zero probability of staying in the same distance to the traffic light in non negative speed: this is due to the fact that there are imprecisions in the way we compute the distance to the traffic light. Then we can see that in Figure \ref{trajectories}, on the bottom right the robot actually stops, wait for the traffic light to turn orange and then speed up, exactly the behavior we wanted it to have. On the other hand, as one can see in Figure \ref{failure}, there is some cases where the robot fails and goes right pass a red light, if the number of episodes of learning is too small.
 
+Moreover one can notice that the trajectories are not always smooth, as one can see in Figure \ref{non_smooth} in page \pageref{non_smooth}, even with $10$ millions iterations.
+
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.4]{img/traj_5m.png}
-\caption{Graphical representation of  policies obtained from Q-learning with $5$ millions  iterations}
+\caption{Graphical representation of policies obtained from Q-learning with $10$ millions  iterations}
 \label{trajectories}
 \end{figure}
 
@@ -1125,6 +1127,8 @@ We tried to learn for a general traffic light, meaning that the robot could adap
 
 What could be interesting to do next is to add another raspberry pie to the robot and use two cameras: a perception of depth would give much more accurate distance from the traffic light, and having more computational power would mean being able to do deep-learning to detect in a more general way traffic light, so we will not have to restrict ourselves to the traffic light we used.
 
+Another project could also be on following some ideas of \citep{Xia2015}. This would be about a project where the robot follows a path, or has to go from one point to the others with obstacles between him and his target. Hence he should learn the shortest path while avoiding the obstacles.
+
 
 
 \newpage
@@ -1141,17 +1145,27 @@ What could be interesting to do next is to add another raspberry pie to the robo
 \label{setting}
 \end{figure}
 
-
+\newpage
 
 \section{Graphs} \label{GRAPHS}
 
-\begin{figure}[h]
+\begin{figure}[H]
 \centering
-\captionsetup{justification=centering,margin=2cm}
-\includegraphics[scale=0.6]{img/Q_learning_curve_random_light.png}
+\captionsetup{justification=centering}
+\includegraphics[scale=0.7]{img/Q_learning_curve_random_light.png}
 \caption{learning curve of the Q-learning algorithm \ref{Ql:algo} applied to our problem, $100$ thousands iterations, but with changing light every $30$ thousands iterations: we can see the drop in the performance at iteration $90$ thousands}
 \label{curve_random}
 \end{figure}
+
+
+\begin{figure}[H]
+\centering
+\captionsetup{justification=centering}
+\includegraphics[scale=0.7]{img/exploration.png}
+\caption{number of states explored in function of the number of iterations done in the learning procedure (total number of useful states is more or less $130'000$)}
+\label{learning_numbers}
+\end{figure}
+
 
 
 \begin{figure}[H]
@@ -1160,8 +1174,35 @@ What could be interesting to do next is to add another raspberry pie to the robo
 \caption{Graphical representation of  policies obtained from Q-learning with $100$ thousands  iterations}
 \label{failure}
 \end{figure}
-\vspace{1cm}
 
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.4]{img/traj1m.png}
+\caption{Graphical representation of  policies obtained from Q-learning with $1$ million  iterations}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.4]{img/traj4m.png}
+\caption{Graphical representation of  policies obtained from Q-learning with $4$ millions  iterations}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.4]{img/traj8m.png}
+\caption{Graphical representation of  policies obtained from Q-learning with $8$ millions  iterations}
+\end{figure}
+
+From these pictures we can see that the robot seems to first learn how to stop at the traffic light (this specific act has the most influence on the cumulative reward of an episode and then seems to learn how to do the task the quickest way possible) 
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.4]{img/traj_not_smooth_10m.png}
+\caption{Graphical representation of  policies obtained from Q-learning with $10$ millions  iterations}
+\label{non_smooth}
+\end{figure}
+
+\newpage
 
 
 \section{Code} \label{code}
@@ -1186,8 +1227,7 @@ All the code can be found in the following git:
 
         ## if we are away from the traffic light we should go forward and no stop
         if self.position > line:
-            #r = -10
-            r = - 30
+            r = - 40
             if action == 0 and self.last_action == 2 :
                 r = -50
             if action == 2 and self.last_action == 0:
